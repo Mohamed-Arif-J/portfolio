@@ -1,0 +1,188 @@
+document.addEventListener('DOMContentLoaded', () => {
+    
+    /* ===== Custom Cursor ===== */
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorGlow = document.querySelector('.cursor-glow');
+    
+    // Check if device is touch capable to disable custom cursor logic if needed
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (!isTouchDevice && cursorDot && cursorGlow) {
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Dot follows instantly
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Glow follows with a slight delay for smooth trailing effect
+            cursorGlow.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Add hover effects for links and buttons
+        const interactables = document.querySelectorAll('a, button, .project-item');
+        
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorGlow.style.width = '60px';
+                cursorGlow.style.height = '60px';
+                cursorGlow.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                cursorDot.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                cursorGlow.style.width = '40px';
+                cursorGlow.style.height = '40px';
+                cursorGlow.style.backgroundColor = 'transparent';
+                cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+
+        // Add hover effects for invert text areas
+        const invertTargets = document.querySelectorAll('.section-title, .about-content p, .project-meta h3, .project-meta p, .skill-name, .skill-desc, .massive-cta, .github-stats p, .top-left, .top-right, .bottom-left, .bottom-right');
+        
+        invertTargets.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorGlow.classList.add('invert-mode');
+                cursorDot.classList.add('invert-mode');
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                cursorGlow.classList.remove('invert-mode');
+                cursorDot.classList.remove('invert-mode');
+            });
+        });
+    }
+
+    /* ===== Intersection Observer for Reveal Animations ===== */
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -10% 0px', // Trigger slightly before element comes into view
+        threshold: 0.1
+    };
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add in-view class to trigger CSS transitions
+                entry.target.classList.add('in-view');
+                // Optional: Stop observing once revealed
+                // observer.unobserve(entry.target); 
+            }
+        });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll('.reveal-text, .reveal-fade, .skill-item');
+    revealElements.forEach(el => {
+        revealObserver.observe(el);
+    });
+    
+    // Splash Screen Logic
+    const splashScreen = document.getElementById('splash-screen');
+    const splashName = document.getElementById('splash-name');
+    
+    if (splashName) {
+        const text = splashName.innerText;
+        splashName.innerHTML = '';
+        text.split('').forEach((char, i) => {
+            const span = document.createElement('span');
+            span.innerText = char === ' ' ? '\u00A0' : char; // Keep space
+            span.style.animationDelay = `${i * 0.08}s`;
+            splashName.appendChild(span);
+        });
+    }
+    
+    // Time to wait: ~15 chars * 80ms + 800ms animation = 2000ms. Wait slightly longer so it's fully read.
+    setTimeout(() => {
+        if (splashScreen) {
+            splashScreen.classList.add('hidden');
+            document.body.classList.remove('no-scroll');
+        }
+        
+        // Trigger hero elements after splash starts moving up
+        setTimeout(() => {
+            const heroElements = document.querySelectorAll('.hero-section .reveal-text, .hero-section .reveal-fade');
+            heroElements.forEach(el => el.classList.add('in-view'));
+            
+            // Signature writing animation
+            const signature = document.querySelector('.signature-text');
+            if(signature) {
+                signature.classList.add('is-writing');
+            }
+        }, 600); // Trigger mid-way through splash exit
+    }, 2800); // 2.8 seconds loading time
+
+    /* ===== Smooth Parallax on Scroll ===== */
+    const parallaxImages = document.querySelectorAll('.parallax-img');
+    
+    window.addEventListener('scroll', () => {
+        if (isTouchDevice) return; // Keep it simple on mobile
+        
+        const scrollY = window.scrollY;
+        
+        parallaxImages.forEach(img => {
+            const container = img.closest('.parallax-container');
+            if (container) {
+                const rect = container.getBoundingClientRect();
+                // Check if element is in viewport
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    // Calculate a slight translateY based on scroll position relative to the element
+                    const distance = rect.top;
+                    const speed = 0.1;
+                    const yPos = distance * speed;
+                    img.style.transform = `translateY(${yPos}px)`;
+                }
+            }
+        });
+    }, { passive: true });
+
+    /* ===== Magnetic Buttons (Optional subtle effect for Contact CTA) ===== */
+    const magneticBtns = document.querySelectorAll('.magnetic-btn');
+    
+    magneticBtns.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const h = rect.width / 2;
+            const v = rect.height / 2;
+            
+            // Calculate distance from center
+            const x = e.clientX - rect.left - h;
+            const y = e.clientY - rect.top - v;
+            
+            // Move button slightly towards mouse
+            btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = `translate(0px, 0px)`;
+            btn.style.transition = 'transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        });
+        
+        btn.addEventListener('mouseenter', () => {
+            btn.style.transition = 'none';
+        });
+    });
+
+    /* ===== Smooth Scroll Anchor Links ===== */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if(targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if(targetElement) {
+                // Native smooth scrolling
+                window.scrollTo({
+                    top: targetElement.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+});
