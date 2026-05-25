@@ -1,14 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ===== Dynamic Today's Date Update ===== */
-    const dateEl = document.querySelector('.top-right');
-    if (dateEl) {
-        const today = new Date();
-        const day = today.getDate();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const month = monthNames[today.getMonth()];
-        const year = today.getFullYear();
-        dateEl.innerHTML = `${day} ${month}, ${year} &rarr;`;
+    /* ===== Theme Toggle Logic ===== */
+    const themeToggle = document.getElementById('theme-toggle');
+    const moonIcon = document.getElementById('moon-icon');
+    const sunIcon = document.getElementById('sun-icon');
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            
+            if (newTheme === 'light') {
+                moonIcon.style.display = 'none';
+                sunIcon.style.display = 'block';
+            } else {
+                moonIcon.style.display = 'block';
+                sunIcon.style.display = 'none';
+            }
+        });
     }
     
     /* ===== Custom Cursor ===== */
@@ -187,9 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const targetElement = document.querySelector(targetId);
             if(targetElement) {
-                // Native smooth scrolling
+                // Offset for fixed glass-navbar (80px height)
+                const headerOffset = 80;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                
                 window.scrollTo({
-                    top: targetElement.offsetTop,
+                    top: offsetPosition,
                     behavior: 'smooth'
                 });
             }

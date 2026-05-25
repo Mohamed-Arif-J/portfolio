@@ -5,17 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mohamed Arif J — Portfolio</title>
-    <meta name="description" content="Portfolio of Mohamed Arif J, Software Engineer & AI Enthusiast.">
+    <meta name="description" content="Building intelligent applications from backend architectures to deep learning models.">
+    <!-- Open Graph tags for SEO -->
+    <meta property="og:title" content="Mohamed Arif J — Portfolio">
+    <meta property="og:description" content="Building intelligent applications from backend architectures to deep learning models.">
+    <meta property="og:image" content="images/ai_image.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&family=Inter:wght@400;500;600;900&family=Oswald:wght@500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&family=Inter:wght@400;500;600;900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern-theme.css">
 </head>
 
-<body class="no-scroll">
+<body class="no-scroll" data-theme="dark">
 
     <!-- Splash Screen -->
     <div id="splash-screen" class="splash-screen">
@@ -29,35 +33,50 @@
     <div class="cursor-dot"></div>
     <div class="cursor-glow"></div>
 
+    <!-- Sticky Navbar -->
+    <nav class="glass-navbar">
+        <div class="nav-logo">MAJ.</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+        </div>
+    </nav>
+
     <!-- Below-hero LiquidEther Background -->
     <div class="liquid-ether-container" id="below-hero-liquid-ether"></div>
 
     <main class="smooth-scroll-container">
 
+        <!-- Hero Section -->
         <section class="hero-section dark-theme">
             <!-- LiquidEther Background Container -->
             <div class="liquid-ether-container" id="hero-liquid-ether"></div>
 
-            <div class="hero-top-bar reveal-fade">
-                <div class="top-left">Software Engineer & AI Enthusiast</div>
-                <div class="top-right">25 May, 2026 &rarr;</div>
-            </div>
-
             <div class="hero-center-content">
                 <h1 class="giant-text solid-text reveal-fade delay-1">PORTFOLIO</h1>
-
-                <img src="IMG_20260519_233652.jpg.jpeg" alt="Mohamed Arif J"
-                    class="hero-profile-pic reveal-fade delay-2">
-
+                <img src="IMG_20260519_233652.jpg.jpeg" alt="Mohamed Arif J" class="hero-profile-pic reveal-fade delay-2">
                 <div class="signature-text">Mohamed Arif</div>
             </div>
 
-            <div class="hero-bottom-bar reveal-fade delay-3">
-                <div class="bottom-left">Mohamed Arif J</div>
-                <div class="bottom-right">github.com/Mohamed-Arif-J</div>
+            <div class="hero-intro reveal-fade delay-3">
+                <p class="hero-subtitle">Building intelligent applications from backend architectures to deep learning models.</p>
+                <div class="hero-ctas">
+                    <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="#" class="btn btn-outline" target="_blank">Download Resume</a>
+                </div>
             </div>
         </section>
 
+        <!-- About Section -->
         <section id="about" class="about-section">
             <div class="container">
                 <div class="about-grid">
@@ -81,18 +100,7 @@
                             human-centric products. I am eager to connect with like-minded professionals, share
                             knowledge, and collaborate on transformative ideas.</p>
 
-                        <!-- StarBorder Button from React Bits -->
-                        <div style="margin: 2.5rem 0 1.5rem 0;">
-                            <a href="#contact" class="star-border-container">
-                                <div class="border-gradient-bottom" style="background: radial-gradient(circle, #EBE4D5, transparent 10%); animation-duration: 5s;"></div>
-                                <div class="border-gradient-top" style="background: radial-gradient(circle, #EBE4D5, transparent 10%); animation-duration: 5s;"></div>
-                                <div class="inner-content" style="background: #171717; color: #EBE4D5; border: 1px solid rgba(235, 228, 213, 0.2); font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem; padding: 14px 28px; border-radius: 20px;">
-                                    Get in Touch &rarr;
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="divider-line"></div>
+                        <div class="divider-line" style="margin-top: 3rem;"></div>
 
                         <div class="about-details">
                             <div class="detail-block">
@@ -111,7 +119,38 @@
             </div>
         </section>
 
-        <section id="work" class="work-section">
+        <!-- Experience Section -->
+        <section id="experience" class="experience-section">
+            <div class="container">
+                <div class="section-header">
+                    <p class="subtitle reveal-fade">Professional Journey</p>
+                    <h2 class="section-title reveal-text"><span class="line"><span>Experience</span></span></h2>
+                </div>
+                <div class="timeline-container reveal-fade">
+                    <div class="timeline-item glass-card">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2023 - Present</div>
+                        <div class="timeline-content">
+                            <h3>B.Tech Computer Science & Engineering</h3>
+                            <h4>Jawaharlal College of Engineering and Technology</h4>
+                            <p>Focusing on foundational software engineering, artificial intelligence algorithms, and scalable web architectures.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item glass-card reveal-fade delay-1">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2024 - 2026</div>
+                        <div class="timeline-content">
+                            <h3>Independent AI Researcher & Developer</h3>
+                            <h4>Freelance / Open Source</h4>
+                            <p>Developed full-stack web applications and deep learning models, integrating tools like PyTorch, Flutter, and Flask.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="work-section">
             <div class="container">
                 <div class="section-header">
                     <p class="subtitle reveal-fade">Selected Works</p>
@@ -119,165 +158,237 @@
                 </div>
 
                 <div class="projects-grid">
-                    <a href="https://github.com/Mohamed-Arif-J/Ai-_image_detector" target="_blank"
-                        class="project-item size-large reveal-fade parallax-container">
+                    <!-- Project 1 -->
+                    <div class="project-item-modern glass-card size-large reveal-fade parallax-container">
                         <div class="project-img-wrapper">
-                            <img src="images/ai_image.png" alt="AI Image Detector" class="parallax-img grayscale">
+                            <img src="images/ai_image.png" alt="AI Image Detector" class="parallax-img">
                             <div class="image-overlay"></div>
                         </div>
-                        <div class="project-meta">
-                            <h3>01 / AI Image Detector</h3>
-                            <p>Utilizes the ResNet-50 CNN architecture with PyTorch to accurately classify AI-generated
-                                vs real artwork. Features CUDA GPU acceleration and a sleek interactive Streamlit web
-                                application with probability visualizations.</p>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <h3>AI Image Detector</h3>
+                                <p class="tagline">Deep Learning Authenticator</p>
+                            </div>
+                            <ul class="key-features">
+                                <li>Classifies AI-generated vs real artwork using ResNet-50.</li>
+                                <li>Powered by <span class="highlight">CUDA GPU acceleration</span> for real-time inference.</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span>PyTorch</span> <span>Python</span> <span>Streamlit</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/Mohamed-Arif-J/Ai-_image_detector" target="_blank" class="btn btn-icon btn-outline btn-sm"><i class="devicon-github-original"></i> Source</a>
+                                <a href="#" class="btn btn-primary btn-sm">Live Demo</a>
+                            </div>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="https://github.com/Mohamed-Arif-J/Fake-review-detector" target="_blank"
-                        class="project-item size-small reveal-fade delay-1 parallax-container">
+                    <!-- Project 2 -->
+                    <div class="project-item-modern glass-card size-small reveal-fade delay-1 parallax-container">
                         <div class="project-img-wrapper">
-                            <img src="images/fake_review.png" alt="Fake Review System Detection"
-                                class="parallax-img grayscale">
+                            <img src="images/fake_review.png" alt="Fake Review System Detection" class="parallax-img">
                             <div class="image-overlay"></div>
                         </div>
-                        <div class="project-meta">
-                            <h3>02 / Fake Review System Detection</h3>
-                            <p>An NLP-based solution built with Python, Flask, and Scikit-learn (Random Forest
-                                Classifier). Analyzes Amazon/Flipkart reviews in real-time via Selenium to detect
-                                fraudulent linguistic patterns with ~87% accuracy.</p>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <h3>Fake Review Detector</h3>
+                                <p class="tagline">NLP Fraud Analysis</p>
+                            </div>
+                            <ul class="key-features">
+                                <li>Real-time Amazon/Flipkart review scraping via Selenium.</li>
+                                <li>Detects fraudulent patterns with <span class="highlight">87% accuracy</span> using Random Forest.</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span>Python</span> <span>Flask</span> <span>Scikit-learn</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/Mohamed-Arif-J/Fake-review-detector" target="_blank" class="btn btn-icon btn-outline btn-sm"><i class="devicon-github-original"></i> Source</a>
+                            </div>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="https://github.com/Mohamed-Arif-J/Smart-hostel-management-sys" target="_blank"
-                        class="project-item size-small reveal-fade parallax-container" style="margin-top: 10vw;">
+                    <!-- Project 3 -->
+                    <div class="project-item-modern glass-card size-small reveal-fade parallax-container" style="margin-top: 10vw;">
                         <div class="project-img-wrapper">
-                            <img src="images/hostel.png" alt="Smart Student Hostel Management"
-                                class="parallax-img grayscale">
+                            <img src="images/hostel.png" alt="Smart Student Hostel Management" class="parallax-img">
                             <div class="image-overlay"></div>
                         </div>
-                        <div class="project-meta">
-                            <h3>03 / Smart Student Hostel Management</h3>
-                            <p>A comprehensive Java Swing desktop application connected to MySQL via JDBC. Automates
-                                administration, room allocation, attendance, and mess menu tracking with tiered secure
-                                access for students, wardens, and admins.</p>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <h3>Smart Hostel Management</h3>
+                                <p class="tagline">Enterprise Desktop App</p>
+                            </div>
+                            <ul class="key-features">
+                                <li>Automates room allocation, attendance, and mess tracking.</li>
+                                <li>Secure tiered access with robust MySQL JDBC integration.</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span>Java</span> <span>Swing</span> <span>MySQL</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/Mohamed-Arif-J/Smart-hostel-management-sys" target="_blank" class="btn btn-icon btn-outline btn-sm"><i class="devicon-github-original"></i> Source</a>
+                            </div>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="#" class="project-item size-large reveal-fade parallax-container" style="margin-top: 5vw;">
+                    <!-- Project 4 -->
+                    <div class="project-item-modern glass-card size-large reveal-fade parallax-container" style="margin-top: 5vw;">
                         <div class="project-img-wrapper">
-                            <img src="images/attendance.png" alt="Smart Attendance Management"
-                                class="parallax-img grayscale">
+                            <img src="images/attendance.png" alt="Smart Attendance Management" class="parallax-img">
                             <div class="image-overlay"></div>
                         </div>
-                        <div class="project-meta">
-                            <h3>04 / Smart Attendance Management System</h3>
-                            <p>A cross-platform (Android and Windows) mobile application built with Flutter. Integrates
-                                Google ML Kit for robust on-device image detection and facial recognition to streamline
-                                and automate student attendance tracking.</p>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <h3>Smart Attendance</h3>
+                                <p class="tagline">Cross-platform Biometric System</p>
+                            </div>
+                            <ul class="key-features">
+                                <li>Automated attendance tracking via Google ML Kit facial recognition.</li>
+                                <li>Seamless cross-platform deployment on Android and Windows.</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span>Flutter</span> <span>Dart</span> <span>ML Kit</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" target="_blank" class="btn btn-icon btn-outline btn-sm"><i class="devicon-github-original"></i> Source</a>
+                                <a href="#" class="btn btn-primary btn-sm">Live Demo</a>
+                            </div>
                         </div>
-                    </a>
-                    <a href="#" class="project-item size-large reveal-fade parallax-container" style="margin-top: 3vw;">
+                    </div>
+
+                    <!-- Project 5 -->
+                    <div class="project-item-modern glass-card size-large reveal-fade parallax-container" style="margin-top: 3vw;">
                         <div class="project-img-wrapper">
-                            <img src="images/rei.png" alt="Rei AI Assistant" class="parallax-img grayscale">
+                            <img src="images/rei.png" alt="Rei AI Assistant" class="parallax-img">
                             <div class="image-overlay"></div>
                         </div>
-                        <div class="project-meta">
-                            <h3>05 / Rei — AI Personal Desktop Assistant (WIP)</h3>
-                            <p>An advanced hybrid offline/online intelligent assistant integrating local LLMs (Ollama,
-                                Qwen2.5) via Python and FastAPI. Currently capable of system commands, browser
-                                automation (Playwright), and modular tool execution, with plans for a React+Electron
-                                interface and RAG-based PDF reading.</p>
+                        <div class="project-content">
+                            <div class="project-header">
+                                <h3>Rei — AI Assistant</h3>
+                                <p class="tagline">Hybrid Offline/Online LLM (WIP)</p>
+                            </div>
+                            <ul class="key-features">
+                                <li>Integrates local LLMs (Ollama, Qwen2.5) via Python and FastAPI.</li>
+                                <li>Capable of system commands and browser automation.</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span>Python</span> <span>FastAPI</span> <span>LLMs</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" target="_blank" class="btn btn-icon btn-outline btn-sm"><i class="devicon-github-original"></i> Source</a>
+                            </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Experience / Skills Section (Languages) -->
-        <section class="skills-section dark-theme-section">
+        <!-- Skills Section -->
+        <section id="skills" class="skills-section">
             <div class="container">
                 <div class="skills-grid">
                     <div class="skills-title">
                         <h2 class="section-title reveal-text"><span class="line"><span>Tech Stack</span></span></h2>
                         <div class="github-stats reveal-fade delay-1">
                             <p class="subtitle" style="margin-top: 2rem;">GitHub Profile</p>
-                            <p class="text-muted" style="margin-top: 0.5rem; font-size: 0.9rem; max-width: 300px;">
-                                Active on GitHub with multiple repositories encompassing AI/ML models, desktop
-                                applications, and full-stack web solutions. Continuously building, experimenting, and
-                                pushing code.</p>
+                            <p class="text-muted" style="margin-top: 0.5rem; font-size: 0.9rem; max-width: 300px;">Active on GitHub with multiple repositories encompassing AI/ML models, desktop applications, and full-stack web solutions. Continuously building, experimenting, and pushing code.</p>
                         </div>
                     </div>
                     <div class="skills-list">
-
-                        <div class="skill-item reveal-fade">
+                        <div class="skill-item glass-card reveal-fade">
                             <div class="skill-icon"><i class="devicon-python-plain colored"></i></div>
                             <div class="skill-name">Python</div>
                             <div class="skill-desc">ML, Data Science, Backend</div>
                         </div>
-
-                        <div class="skill-item reveal-fade">
+                        <div class="skill-item glass-card reveal-fade">
                             <div class="skill-icon"><i class="devicon-java-plain colored"></i></div>
                             <div class="skill-name">Java</div>
                             <div class="skill-desc">Swing, OOP, Enterprise Apps</div>
                         </div>
-
-                        <div class="skill-item reveal-fade">
-                            <div class="skill-icon"><i class="devicon-c-plain colored"></i> <i
-                                    class="devicon-cplusplus-plain colored"></i></div>
+                        <div class="skill-item glass-card reveal-fade">
+                            <div class="skill-icon"><i class="devicon-c-plain colored"></i> <i class="devicon-cplusplus-plain colored"></i></div>
                             <div class="skill-name">C / C++</div>
                             <div class="skill-desc">Algorithms, Systems</div>
                         </div>
-
-                        <div class="skill-item reveal-fade">
+                        <div class="skill-item glass-card reveal-fade">
                             <div class="skill-icon"><i class="devicon-javascript-plain colored"></i></div>
                             <div class="skill-name">JavaScript</div>
                             <div class="skill-desc">DOM, Frontend Logic</div>
                         </div>
-
-                        <div class="skill-item reveal-fade">
+                        <div class="skill-item glass-card reveal-fade">
                             <div class="skill-icon"><i class="devicon-flutter-plain colored"></i></div>
                             <div class="skill-name">Flutter</div>
                             <div class="skill-desc">Cross-platform Mobile</div>
                         </div>
-
-                        <div class="skill-item reveal-fade">
-                            <div class="skill-icon"><i class="devicon-html5-plain colored"></i> <i
-                                    class="devicon-css3-plain colored"></i></div>
+                        <div class="skill-item glass-card reveal-fade">
+                            <div class="skill-icon"><i class="devicon-html5-plain colored"></i> <i class="devicon-css3-plain colored"></i></div>
                             <div class="skill-name">HTML / CSS</div>
                             <div class="skill-desc">UI / UX Design</div>
                         </div>
-
-                        <div class="skill-item reveal-fade">
+                        <div class="skill-item glass-card reveal-fade">
                             <div class="skill-icon"><i class="devicon-azuresqldatabase-plain colored"></i></div>
                             <div class="skill-name">SQL</div>
                             <div class="skill-desc">Relational Databases</div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="contact-section">
-            <div class="contact-content reveal-fade">
-                <p class="subtitle">Next Steps</p>
-                <a href="mailto:mohmedarij@gmail.com" class="massive-cta magnetic-btn">
-                    Let's Talk
-                </a>
+        <section id="contact" class="contact-section" style="padding-top: var(--space-xl);">
+            <div class="container">
+                <div class="section-header">
+                    <p class="subtitle reveal-fade">Let's Connect</p>
+                    <h2 class="section-title reveal-text"><span class="line"><span>Contact Me</span></span></h2>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-form-container glass-card reveal-fade">
+                        <form id="contact-form" class="modern-form">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" placeholder="john@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" rows="4" placeholder="Hello, I'd like to discuss a project..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                        </form>
+                    </div>
+                    <div class="contact-info reveal-fade delay-1">
+                        <h3>Get in Touch</h3>
+                        <p class="text-muted" style="margin-bottom: 2rem;">I'm always open to discussing product design work, AI integrations, or partnership opportunities.</p>
+                        <ul class="contact-links">
+                            <li><a href="mailto:mohmedarij@gmail.com" class="glass-btn"><i class="devicon-google-plain"></i> Email Me</a></li>
+                            <li><a href="https://linkedin.com/in/mohamed-arif-j" target="_blank" class="glass-btn"><i class="devicon-linkedin-plain"></i> LinkedIn</a></li>
+                            <li><a href="https://github.com/Mohamed-Arif-J" target="_blank" class="glass-btn"><i class="devicon-github-original"></i> GitHub</a></li>
+                            <li><a href="tel:8891130667" class="glass-btn">📞 +91 8891130667</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <footer class="footer">
-                <div class="footer-left">
-                    <p>&copy; 2026 Mohamed Arif J.</p>
-                </div>
-                <div class="footer-right">
-                    <a href="tel:8891130667" class="magnetic-btn">Ph: 8891130667</a>
-                    <a href="mailto:mohmedarij@gmail.com" class="magnetic-btn">Email</a>
-                    <a href="https://linkedin.com/in/mohamed-arif-j" target="_blank" class="magnetic-btn">LinkedIn</a>
-                    <a href="https://github.com/Mohamed-Arif-J" target="_blank" class="magnetic-btn">GitHub</a>
-                    <a href="https://www.instagram.com/mohamedarif_j?igsh=MWtmNGNycXN0bjJzZA==" target="_blank"
-                        class="magnetic-btn">Instagram</a>
+            <footer class="modern-footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-left">
+                            <div class="footer-logo">MAJ.</div>
+                            <p class="text-muted">&copy; 2026 Mohamed Arif J.<br>All rights reserved.</p>
+                        </div>
+                        <div class="footer-right" style="text-align: right;">
+                            <p class="text-muted">Designed with passion.</p>
+                            <div class="social-icons" style="justify-content: flex-end;">
+                                <a href="https://github.com/Mohamed-Arif-J" target="_blank" aria-label="GitHub"><i class="devicon-github-original"></i></a>
+                                <a href="https://linkedin.com/in/mohamed-arif-j" target="_blank" aria-label="LinkedIn"><i class="devicon-linkedin-plain"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </footer>
         </section>
@@ -291,5 +402,4 @@
     <!-- Main Portfolio Script -->
     <script src="script.js"></script>
 </body>
-
 </html>
