@@ -411,4 +411,7 @@
         flex-direction: column;
         gap: 2rem;
     }
+    .giant-text, .signature-text {
+        display: none !important;
+    }
 }
