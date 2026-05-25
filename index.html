@@ -29,9 +29,15 @@
     <div class="cursor-dot"></div>
     <div class="cursor-glow"></div>
 
+    <!-- Below-hero LiquidEther Background -->
+    <div class="liquid-ether-container" id="below-hero-liquid-ether"></div>
+
     <main class="smooth-scroll-container">
 
         <section class="hero-section dark-theme">
+            <!-- LiquidEther Background Container -->
+            <div class="liquid-ether-container" id="hero-liquid-ether"></div>
+
             <div class="hero-top-bar reveal-fade">
                 <div class="top-left">Software Engineer & AI Enthusiast</div>
                 <div class="top-right">20 May, 2026 &rarr;</div>
@@ -76,6 +82,17 @@
                             training deep learning models that bridge the gap between complex algorithms and
                             human-centric products. I am eager to connect with like-minded professionals, share
                             knowledge, and collaborate on transformative ideas.</p>
+
+                        <!-- StarBorder Button from React Bits -->
+                        <div style="margin: 2.5rem 0 1.5rem 0;">
+                            <a href="#contact" class="star-border-container">
+                                <div class="border-gradient-bottom" style="background: radial-gradient(circle, #EBE4D5, transparent 10%); animation-duration: 5s;"></div>
+                                <div class="border-gradient-top" style="background: radial-gradient(circle, #EBE4D5, transparent 10%); animation-duration: 5s;"></div>
+                                <div class="inner-content" style="background: #171717; color: #EBE4D5; border: 1px solid rgba(235, 228, 213, 0.2); font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem; padding: 14px 28px; border-radius: 20px;">
+                                    Get in Touch &rarr;
+                                </div>
+                            </a>
+                        </div>
 
                         <div class="divider-line"></div>
 
@@ -269,6 +286,11 @@
 
     </main>
 
+    <!-- Three.js CDN for LiquidEther -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- LiquidEther WebGL script -->
+    <script src="liquid-ether.js"></script>
+    <!-- Main Portfolio Script -->
     <script src="script.js"></script>
 </body>
 

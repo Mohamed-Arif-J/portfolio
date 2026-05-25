@@ -185,4 +185,79 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* ===== Initialize LiquidEther Backgrounds ===== */
+    const liquidEtherEl = document.getElementById('hero-liquid-ether');
+    let heroEther = null;
+    let bodyEther = null;
+
+    if (liquidEtherEl && typeof initLiquidEther === 'function') {
+        heroEther = initLiquidEther(liquidEtherEl, {
+            colors: ['#ff3333', '#EBE4D5', '#5227FF'],
+            mouseForce: 20,
+            cursorSize: 100,
+            isViscous: false,
+            viscous: 30,
+            iterationsViscous: 32,
+            iterationsPoisson: 32,
+            resolution: 0.5,
+            isBounce: false,
+            autoDemo: true,
+            autoSpeed: 0.5,
+            autoIntensity: 2.2,
+            takeoverDuration: 0.25,
+            autoResumeDelay: 3000,
+            autoRampDuration: 0.6
+        });
+    }
+
+    const belowHeroEtherEl = document.getElementById('below-hero-liquid-ether');
+    if (belowHeroEtherEl && typeof initLiquidEther === 'function') {
+        bodyEther = initLiquidEther(belowHeroEtherEl, {
+            colors: ['#5227FF', '#FF9FFC', '#B497CF'], // Exact React Bits colors
+            mouseForce: 20,
+            cursorSize: 100,
+            isViscous: false,
+            viscous: 30,
+            iterationsViscous: 32,
+            iterationsPoisson: 32,
+            resolution: 0.4, // Slightly lower for background performance
+            isBounce: false,
+            autoDemo: true,
+            autoSpeed: 0.4,
+            autoIntensity: 2.0,
+            takeoverDuration: 0.25,
+            autoResumeDelay: 3000,
+            autoRampDuration: 0.6
+        });
+        
+        // Initially pause body ether to save resources since we start at the top
+        if (bodyEther && typeof bodyEther.pause === 'function') {
+            bodyEther.pause();
+        }
+    }
+
+    // Scroll Handler for LiquidEther Canvas switching (Resource Management)
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const threshold = window.innerHeight * 0.75; // Trigger when hero is mostly scrolled past
+
+        if (scrollY > threshold) {
+            // Scrolled down: Fade in below-hero ether, and run it
+            if (belowHeroEtherEl && !belowHeroEtherEl.classList.contains('visible')) {
+                belowHeroEtherEl.classList.add('visible');
+                if (bodyEther && typeof bodyEther.start === 'function') {
+                    bodyEther.start();
+                }
+            }
+        } else {
+            // At the top: Fade out below-hero ether, and pause it to save CPU/GPU
+            if (belowHeroEtherEl && belowHeroEtherEl.classList.contains('visible')) {
+                belowHeroEtherEl.classList.remove('visible');
+                if (bodyEther && typeof bodyEther.pause === 'function') {
+                    bodyEther.pause();
+                }
+            }
+        }
+    }, { passive: true });
+
 });
