@@ -92,6 +92,36 @@ document.addEventListener('DOMContentLoaded', () => {
         revealObserver.observe(el);
     });
     
+    /* ===== Intersection Observer for Navbar Active State ===== */
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    
+    if (sections.length > 0 && navLinks.length > 0) {
+        const navObserverOptions = {
+            root: null,
+            rootMargin: '-40% 0px -60% 0px',
+            threshold: 0
+        };
+        
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, navObserverOptions);
+        
+        sections.forEach(section => {
+            navObserver.observe(section);
+        });
+    }
+
     // Splash Screen Logic
     const splashScreen = document.getElementById('splash-screen');
     const splashName = document.getElementById('splash-name');
