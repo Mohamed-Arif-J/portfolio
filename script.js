@@ -1,24 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ===== Theme Toggle Logic ===== */
-    const themeToggle = document.getElementById('theme-toggle');
-    const moonIcon = document.getElementById('moon-icon');
-    const sunIcon = document.getElementById('sun-icon');
-    
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            
-            if (newTheme === 'light') {
-                moonIcon.style.display = 'none';
-                sunIcon.style.display = 'block';
-            } else {
-                moonIcon.style.display = 'block';
-                sunIcon.style.display = 'none';
-            }
-        });
+    /* ===== Dynamic Today's Date Update ===== */
+    const dateEl = document.querySelector('.nav-date');
+    if (dateEl) {
+        const today = new Date();
+        const day = today.getDate();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const month = monthNames[today.getMonth()];
+        const year = today.getFullYear();
+        dateEl.innerHTML = `${day} ${month}, ${year} &rarr;`;
     }
     
     /* ===== Custom Cursor ===== */

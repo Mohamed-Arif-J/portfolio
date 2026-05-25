@@ -482,21 +482,21 @@ h1, h2, h3, h4 {
 }
 
 .skill-icon {
-    font-size: 2rem;
+    font-size: 2.8rem;
     color: var(--accent-color);
     display: flex;
     gap: 10px;
 }
 
 .skill-name {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 700;
     letter-spacing: -0.02em;
 }
 
 .skill-desc {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 1rem;
     text-align: right;
     font-weight: 500;
 }
@@ -504,8 +504,8 @@ h1, h2, h3, h4 {
 /* ===== Contact Section ===== */
 .contact-section {
     padding: var(--space-xl) 5vw 2rem 5vw;
-    background-color: var(--text-color);
-    color: var(--bg-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     min-height: 80vh;
