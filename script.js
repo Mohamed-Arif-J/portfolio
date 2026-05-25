@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    /* ===== Dynamic Today's Date Update ===== */
+    const dateEl = document.querySelector('.top-right');
+    if (dateEl) {
+        const today = new Date();
+        const day = today.getDate();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const month = monthNames[today.getMonth()];
+        const year = today.getFullYear();
+        dateEl.innerHTML = `${day} ${month}, ${year} &rarr;`;
+    }
     
     /* ===== Custom Cursor ===== */
     const cursorDot = document.querySelector('.cursor-dot');

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap');
+
 /* ===== Base Variables & Reset ===== */
 :root {
     --bg-color: #171717; /* Deep Dark Grey/Black */
@@ -8,7 +10,7 @@
     
     --font-sans: 'Inter', sans-serif;
     --font-giant: 'Oswald', sans-serif;
-    --font-signature: 'Great Vibes', cursive;
+    --font-signature: 'Mr De Haviland', cursive;
     
     --space-sm: 1rem;
     --space-md: 2.5rem;
@@ -710,15 +712,36 @@ h1, h2, h3, h4 {
         min-height: -webkit-fill-available;
     }
     
-    .hero-top-bar, .hero-bottom-bar {
-        font-size: 0.75rem;
-        font-weight: 500;
-        z-index: 10;
-        width: 100%;
+    .hero-top-bar {
+        position: absolute !important;
+        top: 2rem !important;
+        left: 0 !important;
+        right: 0 !important;
+        padding: 0 1.5rem !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        z-index: 10 !important;
     }
     
-    .hero-top-bar {
-        margin-bottom: 2rem;
+    .hero-bottom-bar {
+        position: absolute !important;
+        bottom: 2rem !important;
+        left: 0 !important;
+        right: 0 !important;
+        padding: 0 1.5rem !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        z-index: 10 !important;
     }
     
     .hero-center-content {
@@ -732,24 +755,25 @@ h1, h2, h3, h4 {
     }
     
     .hero-profile-pic {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 65vh !important; /* Perfect height scaling on tall/short mobile screens */
-        width: auto !important;
-        max-width: 85vw !important; /* Prevents overflow cropping */
-        object-fit: contain !important; /* Displays portrait without stretching/cropping */
-        object-position: center;
-        mix-blend-mode: screen; /* Blends JPEG black background with LiquidEther */
-        opacity: 0.9;
-        pointer-events: none;
-        z-index: 1;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        transform: none !important;
+        width: 100vw !important;
+        height: 100vh !important; /* Fills phone width and height completely */
+        object-fit: cover !important; /* Crops cleanly while fitting exact dimensions */
+        object-position: center !important;
+        mix-blend-mode: screen !important; /* Blends JPEG black background with LiquidEther */
+        opacity: 0.85 !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
     }
     
     .signature-text {
-        font-size: clamp(2.5rem, 8.5vw, 4.5rem) !important; /* Perfectly sized signature */
-        transform: translate(-50%, -50%) rotate(-5deg) translateY(12vh) !important; /* Centered relative to viewport, shifted down */
+        font-size: clamp(3rem, 12vw, 6rem) !important; /* Perfectly sized signature for Mr De Haviland */
+        transform: translate(-50%, -50%) rotate(-5deg) translateY(14vh) !important; /* Centered relative to viewport, shifted down */
         left: 50%;
         top: 50%;
         width: 100%;
