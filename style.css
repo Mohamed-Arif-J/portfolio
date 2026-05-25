@@ -201,6 +201,10 @@ h1, h2, h3, h4 {
 }
 
 .hero-top-bar {
+    position: absolute;
+    top: 3rem;
+    left: 4vw;
+    right: 4vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -291,6 +295,10 @@ h1, h2, h3, h4 {
 }
 
 .hero-bottom-bar {
+    position: absolute;
+    bottom: 3rem;
+    left: 4vw;
+    right: 4vw;
     display: flex;
     justify-content: space-between;
     font-size: 0.9rem;
@@ -750,8 +758,9 @@ h1, h2, h3, h4 {
     }
     
     .giant-text {
-        font-size: clamp(2rem, 10.2vw, 5.5rem); /* Scaled down for mobile to fit perfectly without overflow */
-        transform: scaleY(1.3);
+        font-size: clamp(3rem, 14vw, 8rem); /* Massive bold text for premium mobile layout */
+        letter-spacing: -2px;
+        transform: scaleY(2.2); /* Make text much taller */
     }
     
     .hero-profile-pic {
