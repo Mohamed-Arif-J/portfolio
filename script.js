@@ -125,63 +125,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Splash Screen Logic
     const splashScreen = document.getElementById('splash-screen');
     const splashName = document.getElementById('splash-name');
-    const loadingCircle = document.getElementById('loading-circle');
     
-    if (splashName) {
-        const text = splashName.innerText;
-        splashName.innerHTML = '';
-        
-        // Create text spans
-        const spans = [];
-        text.split('').forEach((char, i) => {
-            const span = document.createElement('span');
-            span.innerText = char === ' ' ? '\u00A0' : char;
-            splashName.appendChild(span);
-            spans.push(span);
-        });
-        
-        // Animation sequence
-        setTimeout(() => {
-            // 1. Morph circle to horizontal line
-            if (loadingCircle) loadingCircle.classList.add('morph-to-line');
-            
-            // 2. Reveal text from the line
-            setTimeout(() => {
-                spans.forEach((span, i) => {
-                    setTimeout(() => {
-                        span.classList.add('squid-reveal');
-                    }, i * 60); // Reveal one by one
-                });
-                
-                // 3. Hide the line after text is fully revealed
-                setTimeout(() => {
-                    if (loadingCircle) loadingCircle.classList.add('hide-line');
-                }, spans.length * 60 + 500);
-                
-            }, 500); // Wait for morph-to-line transition
-            
-        }, 1000); // Initial loading spin time
-    }
-    
-    // Time to wait: 1000ms spin + 500ms morph + ~15*60ms reveal + 500ms hide + 500ms read = ~3400ms.
+    // Zoom in sequence
     setTimeout(() => {
-        if (splashScreen) {
-            splashScreen.classList.add('hidden');
-            document.body.classList.remove('no-scroll');
+        if (splashName) {
+            splashName.classList.add('zoom-in');
         }
         
-        // Trigger hero elements after splash starts moving up
+        // Hide splash screen overlay perfectly as it zooms
         setTimeout(() => {
-            const heroElements = document.querySelectorAll('.hero-section .reveal-text, .hero-section .reveal-fade');
-            heroElements.forEach(el => el.classList.add('in-view'));
-            
-            // Signature writing animation
-            const signature = document.querySelector('.signature-text');
-            if(signature) {
-                signature.classList.add('is-writing');
+            if (splashScreen) {
+                splashScreen.classList.add('hidden');
+                document.body.classList.remove('no-scroll');
             }
-        }, 600); // Trigger mid-way through splash exit
-    }, 3500); // Total splash loading time
+            
+            // Trigger hero elements after splash starts hiding
+            setTimeout(() => {
+                const heroElements = document.querySelectorAll('.hero-section .reveal-text, .hero-section .reveal-fade');
+                heroElements.forEach(el => el.classList.add('in-view'));
+                
+                // Signature writing animation
+                const signature = document.querySelector('.signature-text');
+                if(signature) {
+                    signature.classList.add('is-writing');
+                }
+            }, 300);
+        }, 800); // 800ms after zoom starts, fade out the background
+        
+    }, 1200); // Wait 1.2s for user to read the bold name
 
     /* ===== Smooth Parallax on Scroll ===== */
     const parallaxImages = document.querySelectorAll('.parallax-img');
