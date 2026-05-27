@@ -125,19 +125,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Splash Screen Logic
     const splashScreen = document.getElementById('splash-screen');
     const splashName = document.getElementById('splash-name');
+    const loadingCircle = document.getElementById('loading-circle');
     
     if (splashName) {
         const text = splashName.innerText;
         splashName.innerHTML = '';
+        
+        // Create text spans
+        const spans = [];
         text.split('').forEach((char, i) => {
             const span = document.createElement('span');
-            span.innerText = char === ' ' ? '\u00A0' : char; // Keep space
-            span.style.animationDelay = `${i * 0.08}s`;
+            span.innerText = char === ' ' ? '\u00A0' : char;
             splashName.appendChild(span);
+            spans.push(span);
         });
+        
+        // Animation sequence
+        setTimeout(() => {
+            // 1. Morph circle to horizontal line
+            if (loadingCircle) loadingCircle.classList.add('morph-to-line');
+            
+            // 2. Reveal text from the line
+            setTimeout(() => {
+                spans.forEach((span, i) => {
+                    setTimeout(() => {
+                        span.classList.add('squid-reveal');
+                    }, i * 60); // Reveal one by one
+                });
+                
+                // 3. Hide the line after text is fully revealed
+                setTimeout(() => {
+                    if (loadingCircle) loadingCircle.classList.add('hide-line');
+                }, spans.length * 60 + 500);
+                
+            }, 500); // Wait for morph-to-line transition
+            
+        }, 1000); // Initial loading spin time
     }
     
-    // Time to wait: ~15 chars * 80ms + 800ms animation = 2000ms. Wait slightly longer so it's fully read.
+    // Time to wait: 1000ms spin + 500ms morph + ~15*60ms reveal + 500ms hide + 500ms read = ~3400ms.
     setTimeout(() => {
         if (splashScreen) {
             splashScreen.classList.add('hidden');
@@ -155,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 signature.classList.add('is-writing');
             }
         }, 600); // Trigger mid-way through splash exit
-    }, 2800); // 2.8 seconds loading time
+    }, 3500); // Total splash loading time
 
     /* ===== Smooth Parallax on Scroll ===== */
     const parallaxImages = document.querySelectorAll('.parallax-img');
