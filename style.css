@@ -156,7 +156,7 @@ h1, h2, h3, h4 {
     background-color: var(--accent-color); 
     border-radius: 50%;
     pointer-events: none;
-    z-index: 10000;
+    z-index: 10000001;
     transform: translate(-50%, -50%);
     transition: width 0.3s, height 0.3s, background-color 0.3s;
 }
@@ -168,7 +168,7 @@ h1, h2, h3, h4 {
     border: 1px solid var(--accent-color);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 10000000;
     transform: translate(-50%, -50%);
     transition: transform 0.1s ease-out, width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
 }
