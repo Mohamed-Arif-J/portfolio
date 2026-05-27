@@ -124,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Splash Screen Logic
     const splashScreen = document.getElementById('splash-screen');
-    const splashName = document.getElementById('splash-name');
     
     let stopRippleGrid = null;
     if (document.getElementById('ripple-grid-container')) {
@@ -135,33 +134,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
     
-    // Zoom in sequence (Wait 5.5s for RippleGrid effect)
+    // Hold splash screen for 5.5 seconds, then fade it out cleanly to the homepage
     setTimeout(() => {
-        if (splashName) {
-            splashName.classList.add('zoom-in');
+        if (splashScreen) {
+            splashScreen.classList.add('hidden');
+            document.body.classList.remove('no-scroll');
         }
+        if (stopRippleGrid) stopRippleGrid();
         
-        // Hide splash screen overlay perfectly as it zooms
+        // Trigger hero elements after splash starts hiding
         setTimeout(() => {
-            if (splashScreen) {
-                splashScreen.classList.add('hidden');
-                document.body.classList.remove('no-scroll');
-            }
-            if (stopRippleGrid) stopRippleGrid();
+            const heroElements = document.querySelectorAll('.hero-section .reveal-text, .reveal-fade');
+            heroElements.forEach(el => el.classList.add('in-view'));
             
-            // Trigger hero elements after splash starts hiding
-            setTimeout(() => {
-                const heroElements = document.querySelectorAll('.hero-section .reveal-text, .hero-section .reveal-fade');
-                heroElements.forEach(el => el.classList.add('in-view'));
-                
-                // Signature writing animation
-                const signature = document.querySelector('.signature-text');
-                if(signature) {
-                    signature.classList.add('is-writing');
-                }
-            }, 300);
-        }, 800); // 800ms after zoom starts, fade out the background
-        
+            // Signature writing animation
+            const signature = document.querySelector('.signature-text');
+            if(signature) {
+                signature.classList.add('is-writing');
+            }
+        }, 300);
     }, 5500);
 
     /* ===== Smooth Parallax on Scroll ===== */
@@ -321,9 +312,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // RippleGrid Splash Screen Implementation
 function initRippleGrid() {
     const container = document.getElementById('ripple-grid-container');
-    if (!container || !window.ogl) return;
+    const OGLObj = window.OGL || window.ogl;
+    if (!container || !OGLObj) return;
 
-    const { Renderer, Program, Triangle, Mesh } = window.ogl;
+    const { Renderer, Program, Triangle, Mesh } = OGLObj;
     const renderer = new Renderer({
         dpr: Math.min(window.devicePixelRatio, 2),
         alpha: true
@@ -433,6 +425,7 @@ function initStaggeredMenu() {
     let open = false;
     let isAnimating = false;
 
+    const wrapper = document.getElementById('mobile-menu');
     const toggleBtn = document.getElementById('sm-toggle-btn');
     const panel = document.getElementById('staggered-menu-panel');
     const preContainer = document.getElementById('sm-prelayers');
@@ -496,9 +489,10 @@ function initStaggeredMenu() {
         open = !open;
 
         if (open) {
+            if (wrapper) wrapper.style.pointerEvents = 'auto';
             openTl.play(0);
             gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
-            gsap.to(textInner, { yPercent: -25, duration: 0.5 + 2 * 0.07, ease: 'power4.out' }); // 'Close' is at -25% (2nd of 4 lines)
+            gsap.to(textInner, { yPercent: -50, duration: 0.5 + 2 * 0.07, ease: 'power4.out' }); // 'Close' is at -50% (2nd of 2 lines)
         } else {
             closeMenu();
         }
@@ -514,6 +508,7 @@ function initStaggeredMenu() {
                 if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 });
                 if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
                 if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+                if (wrapper) wrapper.style.pointerEvents = 'none';
                 isAnimating = false;
             }
         });
