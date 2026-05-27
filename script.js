@@ -126,7 +126,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const splashScreen = document.getElementById('splash-screen');
     const splashName = document.getElementById('splash-name');
     
-    // Zoom in sequence
+    let stopRippleGrid = null;
+    if (document.getElementById('ripple-grid-container')) {
+        setTimeout(() => {
+            if (typeof initRippleGrid === 'function') {
+                stopRippleGrid = initRippleGrid();
+            }
+        }, 100);
+    }
+    
+    // Zoom in sequence (Wait 5.5s for RippleGrid effect)
     setTimeout(() => {
         if (splashName) {
             splashName.classList.add('zoom-in');
@@ -138,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 splashScreen.classList.add('hidden');
                 document.body.classList.remove('no-scroll');
             }
+            if (stopRippleGrid) stopRippleGrid();
             
             // Trigger hero elements after splash starts hiding
             setTimeout(() => {
@@ -152,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300);
         }, 800); // 800ms after zoom starts, fade out the background
         
-    }, 1200); // Wait 1.2s for user to read the bold name
+    }, 5500);
 
     /* ===== Smooth Parallax on Scroll ===== */
     const parallaxImages = document.querySelectorAll('.parallax-img');
@@ -302,4 +312,225 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: true });
 
+    // Initialize StaggeredMenu
+    if (typeof initStaggeredMenu === 'function') {
+        initStaggeredMenu();
+    }
 });
+
+// RippleGrid Splash Screen Implementation
+function initRippleGrid() {
+    const container = document.getElementById('ripple-grid-container');
+    if (!container || !window.ogl) return;
+
+    const { Renderer, Program, Triangle, Mesh } = window.ogl;
+    const renderer = new Renderer({
+        dpr: Math.min(window.devicePixelRatio, 2),
+        alpha: true
+    });
+    const gl = renderer.gl;
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.canvas.style.width = '100%';
+    gl.canvas.style.height = '100%';
+    container.appendChild(gl.canvas);
+
+    const vert = `
+        attribute vec2 position;
+        varying vec2 vUv;
+        void main() {
+            vUv = position * 0.5 + 0.5;
+            gl_Position = vec4(position, 0.0, 1.0);
+        }
+    `;
+
+    const frag = `
+        precision highp float;
+        uniform float iTime;
+        uniform vec2 iResolution;
+        varying vec2 vUv;
+        float pi = 3.141592;
+
+        void main() {
+            vec2 uv = vUv * 2.0 - 1.0;
+            uv.x *= iResolution.x / iResolution.y;
+
+            float dist = length(uv);
+            float func = sin(pi * (iTime - dist));
+            vec2 rippleUv = uv + uv * func * 0.05;
+
+            vec2 a = sin(10.0 * 0.5 * pi * rippleUv - pi / 2.0);
+            vec2 b = abs(a);
+            
+            float aaWidth = 0.5;
+            vec2 smoothB = vec2(
+                smoothstep(0.0, aaWidth, b.x),
+                smoothstep(0.0, aaWidth, b.y)
+            );
+
+            vec3 color = vec3(0.0);
+            color += exp(-15.0 * smoothB.x * (0.8 + 0.5 * sin(pi * iTime)));
+            color += exp(-15.0 * smoothB.y);
+            color += 0.5 * exp(-(15.0 / 4.0) * sin(smoothB.x));
+            color += 0.5 * exp(-(15.0 / 3.0) * smoothB.y);
+
+            color += 0.1 * exp(-15.0 * 0.5 * smoothB.x);
+            color += 0.1 * exp(-15.0 * 0.5 * smoothB.y);
+
+            float fadeDistance = 1.5;
+            float ddd = exp(-2.0 * clamp(pow(dist, fadeDistance), 0.0, 1.0));
+            
+            vec2 vignetteCoords = vUv - 0.5;
+            float vignetteDistance = length(vignetteCoords);
+            float vignette = 1.0 - pow(vignetteDistance * 2.0, 2.0);
+            vignette = clamp(vignette, 0.0, 1.0);
+            
+            vec3 t = vec3(1.0, 1.0, 1.0);
+
+            float finalFade = ddd * vignette;
+            float alpha = length(color) * finalFade * 1.0;
+            gl_FragColor = vec4(color * t * finalFade * 1.0, alpha);
+        }
+    `;
+
+    const uniforms = {
+        iTime: { value: 0 },
+        iResolution: { value: [1, 1] }
+    };
+
+    const geometry = new Triangle(gl);
+    const program = new Program(gl, { vertex: vert, fragment: frag, uniforms });
+    const mesh = new Mesh(gl, { geometry, program });
+
+    const resize = () => {
+        if (!container) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        renderer.setSize(w, h);
+        uniforms.iResolution.value = [w, h];
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    let requestID;
+    const render = t => {
+        uniforms.iTime.value = t * 0.001;
+        renderer.render({ scene: mesh });
+        requestID = requestAnimationFrame(render);
+    };
+    requestAnimationFrame(render);
+
+    return () => {
+        cancelAnimationFrame(requestID);
+        window.removeEventListener('resize', resize);
+    };
+}
+
+// StaggeredMenu Implementation
+function initStaggeredMenu() {
+    if (!window.gsap) return;
+
+    let open = false;
+    let isAnimating = false;
+
+    const toggleBtn = document.getElementById('sm-toggle-btn');
+    const panel = document.getElementById('staggered-menu-panel');
+    const preContainer = document.getElementById('sm-prelayers');
+    const preLayers = Array.from(preContainer.querySelectorAll('.sm-prelayer'));
+    const plusH = document.getElementById('sm-plus-h');
+    const plusV = document.getElementById('sm-plus-v');
+    const icon = document.getElementById('sm-icon');
+    const textInner = document.getElementById('sm-text-inner');
+    
+    if (!toggleBtn || !panel) return;
+
+    const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
+    const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list .sm-panel-item'));
+    const socialTitle = panel.querySelector('.sm-socials-title');
+    const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
+
+    const offscreen = 100; // Position Right
+
+    // Set initial GSAP states
+    gsap.set([panel, ...preLayers], { xPercent: offscreen, opacity: 1 });
+    gsap.set(preContainer, { xPercent: 0, opacity: 1 });
+    gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
+    gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
+    gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
+    gsap.set(textInner, { yPercent: 0 });
+
+    if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
+    if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 });
+    if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
+    if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+
+    let openTl = gsap.timeline({ paused: true, onComplete: () => isAnimating = false });
+
+    // Build timeline
+    preLayers.forEach((layer, i) => {
+        openTl.fromTo(layer, { xPercent: offscreen }, { xPercent: 0, duration: 0.5, ease: 'power4.out' }, i * 0.07);
+    });
+    
+    const panelInsertTime = (preLayers.length ? (preLayers.length - 1) * 0.07 : 0) + (preLayers.length ? 0.08 : 0);
+    const panelDuration = 0.65;
+    
+    openTl.fromTo(panel, { xPercent: offscreen }, { xPercent: 0, duration: panelDuration, ease: 'power4.out' }, panelInsertTime);
+
+    const itemsStart = panelInsertTime + panelDuration * 0.15;
+    if (itemEls.length) {
+        openTl.to(itemEls, { yPercent: 0, rotate: 0, duration: 1, ease: 'power4.out', stagger: { each: 0.1, from: 'start' } }, itemsStart);
+        if (numberEls.length) {
+            openTl.to(numberEls, { duration: 0.6, ease: 'power2.out', '--sm-num-opacity': 1, stagger: { each: 0.08, from: 'start' } }, itemsStart + 0.1);
+        }
+    }
+
+    const socialsStart = panelInsertTime + panelDuration * 0.4;
+    if (socialTitle) openTl.to(socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
+    if (socialLinks.length) {
+        openTl.to(socialLinks, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: { each: 0.08, from: 'start' }, onComplete: () => gsap.set(socialLinks, { clearProps: 'opacity' }) }, socialsStart + 0.04);
+    }
+
+    function toggleMenu() {
+        if (isAnimating) return;
+        isAnimating = true;
+        open = !open;
+
+        if (open) {
+            openTl.play(0);
+            gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
+            gsap.to(textInner, { yPercent: -25, duration: 0.5 + 2 * 0.07, ease: 'power4.out' }); // 'Close' is at -25% (2nd of 4 lines)
+        } else {
+            closeMenu();
+        }
+    }
+
+    function closeMenu() {
+        openTl.kill();
+        const all = [...preLayers, panel];
+        gsap.to(all, {
+            xPercent: offscreen, duration: 0.32, ease: 'power3.in', overwrite: 'auto',
+            onComplete: () => {
+                if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
+                if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 });
+                if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
+                if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+                isAnimating = false;
+            }
+        });
+        gsap.to(icon, { rotate: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+        gsap.to(textInner, { yPercent: 0, duration: 0.5 + 2 * 0.07, ease: 'power4.out' }); // 'Menu'
+    }
+
+    toggleBtn.addEventListener('click', toggleMenu);
+    
+    // Close on link click
+    panel.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+            if (open) {
+                open = false;
+                closeMenu();
+            }
+        });
+    });
+}
+

@@ -23,8 +23,9 @@
 
     <!-- Splash Screen -->
     <div id="splash-screen" class="splash-screen">
+        <div class="ripple-grid-container" id="ripple-grid-container"></div>
         <div class="splash-content" id="splash-content">
-            <h1 class="splash-name" id="splash-name">Mohamed Arif J</h1>
+            <h1 class="splash-name" id="splash-name" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Mohamed Arif J</h1>
         </div>
     </div>
 
@@ -45,6 +46,46 @@
         </ul>
         <div class="nav-actions">
             <div class="nav-date"></div>
+        </div>
+        
+        <!-- Mobile Menu (StaggeredMenu) -->
+        <div class="staggered-menu-wrapper" id="mobile-menu" data-position="right">
+            <div class="sm-prelayers" id="sm-prelayers" aria-hidden="true">
+                <div class="sm-prelayer" style="background: #B497CF"></div>
+                <div class="sm-prelayer" style="background: #5227FF"></div>
+            </div>
+            <button class="sm-toggle" id="sm-toggle-btn" aria-label="Open menu">
+                <span class="sm-toggle-textWrap" aria-hidden="true">
+                    <span class="sm-toggle-textInner" id="sm-text-inner">
+                        <span class="sm-toggle-line">Menu</span>
+                        <span class="sm-toggle-line">Close</span>
+                        <span class="sm-toggle-line">Menu</span>
+                        <span class="sm-toggle-line">Close</span>
+                    </span>
+                </span>
+                <span class="sm-icon" id="sm-icon" aria-hidden="true">
+                    <span class="sm-icon-line" id="sm-plus-h"></span>
+                    <span class="sm-icon-line sm-icon-line-v" id="sm-plus-v"></span>
+                </span>
+            </button>
+            <aside id="staggered-menu-panel" class="staggered-menu-panel" aria-hidden="true">
+                <div class="sm-panel-inner">
+                    <ul class="sm-panel-list" role="list" data-numbering="true">
+                        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#about" data-index="01"><span class="sm-panel-itemLabel">About</span></a></li>
+                        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#skills" data-index="02"><span class="sm-panel-itemLabel">Skills</span></a></li>
+                        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#projects" data-index="03"><span class="sm-panel-itemLabel">Projects</span></a></li>
+                        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#education" data-index="04"><span class="sm-panel-itemLabel">Education</span></a></li>
+                        <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#contact" data-index="05"><span class="sm-panel-itemLabel">Contact</span></a></li>
+                    </ul>
+                    <div class="sm-socials" aria-label="Social links">
+                        <h3 class="sm-socials-title">Socials</h3>
+                        <ul class="sm-socials-list" role="list">
+                            <li class="sm-socials-item"><a href="https://github.com/Mohamed-Arif-J" target="_blank" class="sm-socials-link">GitHub</a></li>
+                            <li class="sm-socials-item"><a href="https://linkedin.com/in/mohamed-arif-j" target="_blank" class="sm-socials-link">LinkedIn</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
         </div>
     </nav>
 
@@ -395,6 +436,10 @@
 
     </main>
 
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- OGL CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/ogl@0.0.113/dist/ogl.umd.js"></script>
     <!-- Three.js CDN for LiquidEther -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- LiquidEther WebGL script -->
