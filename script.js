@@ -1,14 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ===== Dynamic Today's Date Update ===== */
-    const dateEl = document.querySelector('.nav-date');
-    if (dateEl) {
-        const today = new Date();
-        const day = today.getDate();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const month = monthNames[today.getMonth()];
-        const year = today.getFullYear();
-        dateEl.innerHTML = `${day} ${month}, ${year} &rarr;`;
+    /* ===== Dynamic Date & Ticking Scramble Clock ===== */
+    const dateDisplay = document.querySelector('.nav-date-display');
+    const timeDisplay = document.querySelector('.nav-time-display');
+    
+    if (timeDisplay) {
+        function updateClock() {
+            const now = new Date();
+            
+            // Format date: "01 Jun, 2026"
+            const day = String(now.getDate()).padStart(2, '0');
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const month = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+            const dateString = `${day} ${month}, ${year}`;
+            
+            if (dateDisplay && dateDisplay.textContent !== dateString) {
+                dateDisplay.textContent = dateString;
+            }
+            
+            // Format time: "HH:MM:SS"
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            
+            // Set time content
+            timeDisplay.textContent = timeString;
+            
+            // Trigger scramble/shuffle animation on the ticking clock!
+            if (typeof initShuffleText === 'function') {
+                initShuffleText(timeDisplay, {
+                    shuffleDirection: 'down',
+                    duration: 0.25,
+                    animationMode: 'random',
+                    shuffleTimes: 1,
+                    ease: 'power2.out',
+                    stagger: 0.01,
+                    triggerOnHover: false
+                });
+            }
+        }
+        
+        // Initialize immediately
+        updateClock();
+        // Update every second
+        setInterval(updateClock, 1000);
     }
     
     /* ===== Custom Cursor ===== */
@@ -138,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Hold splash screen for 3.5 seconds, then fade it out cleanly to the homepage
+    // Hold splash screen for 1.1 seconds, then fade it out cleanly to the homepage
     setTimeout(() => {
         if (splashScreen) {
             splashScreen.classList.add('hidden');
@@ -156,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 signature.classList.add('is-writing');
             }
         }, 300);
-    }, 3500);
+    }, 1100);
 
     /* ===== Smooth Parallax on Scroll ===== */
     const parallaxImages = document.querySelectorAll('.parallax-img');
