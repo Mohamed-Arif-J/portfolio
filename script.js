@@ -124,23 +124,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Splash Screen Logic
     const splashScreen = document.getElementById('splash-screen');
+    const splashName = document.getElementById('splash-name');
     
-    let stopRippleGrid = null;
-    if (document.getElementById('ripple-grid-container')) {
-        setTimeout(() => {
-            if (typeof initRippleGrid === 'function') {
-                stopRippleGrid = initRippleGrid();
-            }
-        }, 100);
+    if (splashName && typeof initShuffleText === 'function') {
+        initShuffleText(splashName, {
+            shuffleDirection: 'right',
+            duration: 0.35,
+            animationMode: 'evenodd',
+            shuffleTimes: 1,
+            ease: 'power3.out',
+            stagger: 0.03,
+            triggerOnHover: true
+        });
     }
     
-    // Hold splash screen for 5.5 seconds, then fade it out cleanly to the homepage
+    // Hold splash screen for 3.5 seconds, then fade it out cleanly to the homepage
     setTimeout(() => {
         if (splashScreen) {
             splashScreen.classList.add('hidden');
             document.body.classList.remove('no-scroll');
         }
-        if (stopRippleGrid) stopRippleGrid();
         
         // Trigger hero elements after splash starts hiding
         setTimeout(() => {
@@ -153,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 signature.classList.add('is-writing');
             }
         }, 300);
-    }, 5500);
+    }, 3500);
 
     /* ===== Smooth Parallax on Scroll ===== */
     const parallaxImages = document.querySelectorAll('.parallax-img');
@@ -309,236 +312,254 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// RippleGrid Splash Screen Implementation
-function initRippleGrid() {
-    const container = document.getElementById('ripple-grid-container');
-    const OGLObj = window.OGL || window.ogl;
-    if (!container || !OGLObj) return;
-
-    // Configurable Props mapping to React Bits spec
-    const enableRainbow = false;
-    const gridColor = '#ffffff';
-    const rippleIntensity = 0.07;
-    const gridSize = 14.0;
-    const gridThickness = 14.0;
-    const mouseInteraction = true;
-    const mouseInteractionRadius = 0.6;
-    const opacity = 0.8;
-    const fadeDistance = 2.0;
-    const vignetteStrength = 5.0;
-    const glowIntensity = 1.0;
-    const gridRotation = 0.0;
-
-    const hexToRgb = hex => {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result
-            ? [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255]
-            : [1, 1, 1];
-    };
-
-    const { Renderer, Program, Triangle, Mesh } = OGLObj;
-    const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
-        alpha: true
-    });
-    const gl = renderer.gl;
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.canvas.style.width = '100%';
-    gl.canvas.style.height = '100%';
-    container.appendChild(gl.canvas);
-
-    const vert = `
-attribute vec2 position;
-varying vec2 vUv;
-void main() {
-    vUv = position * 0.5 + 0.5;
-    gl_Position = vec4(position, 0.0, 1.0);
-}`;
-
-    const frag = `precision highp float;
-uniform float iTime;
-uniform vec2 iResolution;
-uniform bool enableRainbow;
-uniform vec3 gridColor;
-uniform float rippleIntensity;
-uniform float gridSize;
-uniform float gridThickness;
-uniform float fadeDistance;
-uniform float vignetteStrength;
-uniform float glowIntensity;
-uniform float opacity;
-uniform float gridRotation;
-uniform bool mouseInteraction;
-uniform vec2 mousePosition;
-uniform float mouseInfluence;
-uniform float mouseInteractionRadius;
-varying vec2 vUv;
-
-float pi = 3.141592;
-
-mat2 rotate(float angle) {
-    float s = sin(angle);
-    float c = cos(angle);
-    return mat2(c, -s, s, c);
-}
-
-void main() {
-    vec2 uv = vUv * 2.0 - 1.0;
-    uv.x *= iResolution.x / iResolution.y;
-
-    if (gridRotation != 0.0) {
-        uv = rotate(gridRotation * pi / 180.0) * uv;
-    }
-
-    float dist = length(uv);
-    float func = sin(pi * (iTime - dist));
-    vec2 rippleUv = uv + uv * func * rippleIntensity;
-
-    if (mouseInteraction && mouseInfluence > 0.0) {
-        vec2 mouseUv = (mousePosition * 2.0 - 1.0);
-        mouseUv.x *= iResolution.x / iResolution.y;
-        float mouseDist = length(uv - mouseUv);
-        
-        float influence = mouseInfluence * exp(-mouseDist * mouseDist / (mouseInteractionRadius * mouseInteractionRadius));
-        
-        float mouseWave = sin(pi * (iTime * 2.0 - mouseDist * 3.0)) * influence;
-        rippleUv += normalize(uv - mouseUv) * mouseWave * rippleIntensity * 0.3;
-    }
-
-    vec2 a = sin(gridSize * 0.5 * pi * rippleUv - pi / 2.0);
-    vec2 b = abs(a);
-
-    float aaWidth = 0.5;
-    vec2 smoothB = vec2(
-        smoothstep(0.0, aaWidth, b.x),
-        smoothstep(0.0, aaWidth, b.y)
-    );
-
-    vec3 color = vec3(0.0);
-    color += exp(-gridThickness * smoothB.x * (0.8 + 0.5 * sin(pi * iTime)));
-    color += exp(-gridThickness * smoothB.y);
-    color += 0.5 * exp(-(gridThickness / 4.0) * sin(smoothB.x));
-    color += 0.5 * exp(-(gridThickness / 3.0) * smoothB.y);
-
-    if (glowIntensity > 0.0) {
-        color += glowIntensity * exp(-gridThickness * 0.5 * smoothB.x);
-        color += glowIntensity * exp(-gridThickness * 0.5 * smoothB.y);
-    }
-
-    float ddd = exp(-2.0 * clamp(pow(dist, fadeDistance), 0.0, 1.0));
+// Shuffle Component Implementation (React Bits variant in Vanilla JS)
+function initShuffleText(el, options = {}) {
+    if (!el || !window.gsap) return;
     
-    vec2 vignetteCoords = vUv - 0.5;
-    float vignetteDistance = length(vignetteCoords);
-    float vignette = 1.0 - pow(vignetteDistance * 2.0, vignetteStrength);
-    vignette = clamp(vignette, 0.0, 1.0);
+    const settings = {
+        text: el.getAttribute('data-text') || el.textContent || "",
+        shuffleDirection: options.shuffleDirection || 'right',
+        duration: options.duration || 0.35,
+        maxDelay: options.maxDelay || 0,
+        ease: options.ease || 'power3.out',
+        shuffleTimes: options.shuffleTimes !== undefined ? options.shuffleTimes : 1,
+        animationMode: options.animationMode || 'evenodd',
+        loop: options.loop || false,
+        loopDelay: options.loopDelay || 0,
+        stagger: options.stagger !== undefined ? options.stagger : 0.03,
+        scrambleCharset: options.scrambleCharset || '',
+        colorFrom: options.colorFrom || null,
+        colorTo: options.colorTo || null,
+        triggerOnHover: options.triggerOnHover !== undefined ? options.triggerOnHover : true
+    };
     
-    vec3 t;
-    if (enableRainbow) {
-        t = vec3(
-            uv.x * 0.5 + 0.5 * sin(iTime),
-            uv.y * 0.5 + 0.5 * cos(iTime),
-            pow(cos(iTime), 4.0)
-        ) + 0.5;
-    } else {
-        t = gridColor;
-    }
-
-    float finalFade = ddd * vignette;
-    float alpha = length(color) * finalFade * opacity;
-    gl_FragColor = vec4(color * t * finalFade * opacity, alpha);
-}`;
-
-    const uniforms = {
-        iTime: { value: 0 },
-        iResolution: { value: [1, 1] },
-        enableRainbow: { value: enableRainbow },
-        gridColor: { value: hexToRgb(gridColor) },
-        rippleIntensity: { value: rippleIntensity },
-        gridSize: { value: gridSize },
-        gridThickness: { value: gridThickness },
-        fadeDistance: { value: fadeDistance },
-        vignetteStrength: { value: vignetteStrength },
-        glowIntensity: { value: glowIntensity },
-        opacity: { value: opacity },
-        gridRotation: { value: gridRotation },
-        mouseInteraction: { value: mouseInteraction },
-        mousePosition: { value: [0.5, 0.5] },
-        mouseInfluence: { value: 0 },
-        mouseInteractionRadius: { value: mouseInteractionRadius }
-    };
-
-    const geometry = new Triangle(gl);
-    const program = new Program(gl, { vertex: vert, fragment: frag, uniforms });
-    const mesh = new Mesh(gl, { geometry, program });
-
-    const resize = () => {
-        if (!container) return;
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        renderer.setSize(w, h);
-        uniforms.iResolution.value = [w, h];
-    };
-
-    let targetMouse = { x: 0.5, y: 0.5 };
-    let currentMouse = { x: 0.5, y: 0.5 };
-    let mouseInfluence = 0.0;
-    let targetInfluence = 0.0;
-
-    const handleMouseMove = e => {
-        if (!mouseInteraction || !container) return;
-        const rect = container.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = 1.0 - (e.clientY - rect.top) / rect.height; // Flip Y coordinate
-        targetMouse = { x, y };
-    };
-
-    const handleMouseEnter = () => {
-        if (!mouseInteraction) return;
-        targetInfluence = 1.0;
-    };
-
-    const handleMouseLeave = () => {
-        if (!mouseInteraction) return;
-        targetInfluence = 0.0;
-    };
-
-    window.addEventListener('resize', resize);
-    if (mouseInteraction) {
-        container.addEventListener('mousemove', handleMouseMove);
-        container.addEventListener('mouseenter', handleMouseEnter);
-        container.addEventListener('mouseleave', handleMouseLeave);
-    }
-    resize();
-
-    let requestID;
-    const render = t => {
-        uniforms.iTime.value = t * 0.001;
-
-        const lerpFactor = 0.1;
-        currentMouse.x += (targetMouse.x - currentMouse.x) * lerpFactor;
-        currentMouse.y += (targetMouse.y - currentMouse.y) * lerpFactor;
-        uniforms.mousePosition.value = [currentMouse.x, currentMouse.y];
-
-        mouseInfluence += (targetInfluence - mouseInfluence) * 0.05;
-        uniforms.mouseInfluence.value = mouseInfluence;
-
-        renderer.render({ scene: mesh });
-        requestID = requestAnimationFrame(render);
-    };
-    requestAnimationFrame(render);
-
-    return () => {
-        window.removeEventListener('resize', resize);
-        if (mouseInteraction && container) {
-            container.removeEventListener('mousemove', handleMouseMove);
-            container.removeEventListener('mouseenter', handleMouseEnter);
-            container.removeEventListener('mouseleave', handleMouseLeave);
+    let wrappers = [];
+    let tl = null;
+    let playing = false;
+    
+    function teardown() {
+        if (tl) {
+            tl.kill();
+            tl = null;
         }
-        renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
-        container?.removeChild(gl.canvas);
-        cancelAnimationFrame(requestID);
-    };
+        if (wrappers.length) {
+            wrappers.forEach(wrap => {
+                const inner = wrap.firstElementChild;
+                const orig = inner ? inner.querySelector('[data-orig="1"]') : null;
+                if (orig && wrap.parentNode) {
+                    wrap.parentNode.replaceChild(orig, wrap);
+                }
+            });
+            wrappers = [];
+        }
+        playing = false;
+    }
+    
+    function build() {
+        teardown();
+        
+        const textContent = settings.text;
+        el.innerHTML = '';
+        
+        const chars = textContent.split('').map(ch => {
+            const span = document.createElement('span');
+            span.textContent = ch === ' ' ? '\u00A0' : ch;
+            span.className = 'shuffle-char';
+            el.appendChild(span);
+            return span;
+        });
+        
+        const rolls = Math.max(1, Math.floor(settings.shuffleTimes));
+        const rand = set => set.charAt(Math.floor(Math.random() * set.length)) || '';
+        
+        chars.forEach(ch => {
+            const parent = ch.parentElement;
+            if (!parent) return;
+            
+            const rect = ch.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            if (!w) return;
+            
+            const wrap = document.createElement('span');
+            wrap.className = 'shuffle-char-wrapper';
+            Object.assign(wrap.style, {
+                display: 'inline-block',
+                overflow: 'hidden',
+                width: w + 'px',
+                height: settings.shuffleDirection === 'up' || settings.shuffleDirection === 'down' ? h + 'px' : 'auto',
+                verticalAlign: 'bottom'
+            });
+            
+            const inner = document.createElement('span');
+            Object.assign(inner.style, {
+                display: 'inline-block',
+                whiteSpace: settings.shuffleDirection === 'up' || settings.shuffleDirection === 'down' ? 'normal' : 'nowrap',
+                willChange: 'transform'
+            });
+            
+            parent.insertBefore(wrap, ch);
+            wrap.appendChild(inner);
+            
+            const firstOrig = ch.cloneNode(true);
+            Object.assign(firstOrig.style, {
+                display: settings.shuffleDirection === 'up' || settings.shuffleDirection === 'down' ? 'block' : 'inline-block',
+                width: w + 'px',
+                textAlign: 'center'
+            });
+            
+            ch.setAttribute('data-orig', '1');
+            Object.assign(ch.style, {
+                display: settings.shuffleDirection === 'up' || settings.shuffleDirection === 'down' ? 'block' : 'inline-block',
+                width: w + 'px',
+                textAlign: 'center'
+            });
+            
+            inner.appendChild(firstOrig);
+            for (let k = 0; k < rolls; k++) {
+                const c = ch.cloneNode(true);
+                if (settings.scrambleCharset) c.textContent = rand(settings.scrambleCharset);
+                Object.assign(c.style, {
+                    display: settings.shuffleDirection === 'up' || settings.shuffleDirection === 'down' ? 'block' : 'inline-block',
+                    width: w + 'px',
+                    textAlign: 'center'
+                });
+                inner.appendChild(c);
+            }
+            inner.appendChild(ch);
+            
+            const steps = rolls + 1;
+            
+            let startX = 0, finalX = 0, startY = 0, finalY = 0;
+            
+            if (settings.shuffleDirection === 'right' || settings.shuffleDirection === 'down') {
+                const firstCopy = inner.firstElementChild;
+                const real = inner.lastElementChild;
+                if (real) inner.insertBefore(real, inner.firstChild);
+                if (firstCopy) inner.appendChild(firstCopy);
+            }
+            
+            if (settings.shuffleDirection === 'right') {
+                startX = -steps * w;
+                finalX = 0;
+            } else if (settings.shuffleDirection === 'left') {
+                startX = 0;
+                finalX = -steps * w;
+            } else if (settings.shuffleDirection === 'down') {
+                startY = -steps * h;
+                finalY = 0;
+            } else if (settings.shuffleDirection === 'up') {
+                startY = 0;
+                finalY = -steps * h;
+            }
+            
+            if (settings.shuffleDirection === 'left' || settings.shuffleDirection === 'right') {
+                window.gsap.set(inner, { x: startX, y: 0, force3D: true });
+                inner.setAttribute('data-start-x', String(startX));
+                inner.setAttribute('data-final-x', String(finalX));
+            } else {
+                window.gsap.set(inner, { x: 0, y: startY, force3D: true });
+                inner.setAttribute('data-start-y', String(startY));
+                inner.setAttribute('data-final-y', String(finalY));
+            }
+            
+            if (settings.colorFrom) inner.style.color = settings.colorFrom;
+            wrappers.push(wrap);
+        });
+    }
+    
+    function play() {
+        const strips = wrappers.map(w => w.firstElementChild);
+        if (!strips.length) return;
+        
+        playing = true;
+        const isVertical = settings.shuffleDirection === 'up' || settings.shuffleDirection === 'down';
+        
+        tl = window.gsap.timeline({
+            smoothChildTiming: true,
+            repeat: settings.loop ? -1 : 0,
+            repeatDelay: settings.loop ? settings.loopDelay : 0,
+            onRepeat: () => {
+                if (isVertical) {
+                    window.gsap.set(strips, { y: (i, t) => parseFloat(t.getAttribute('data-start-y') || '0') });
+                } else {
+                    window.gsap.set(strips, { x: (i, t) => parseFloat(t.getAttribute('data-start-x') || '0') });
+                }
+            },
+            onComplete: () => {
+                playing = false;
+                if (!settings.loop) {
+                    // Clean up and set static text
+                    wrappers.forEach(w => {
+                        const strip = w.firstElementChild;
+                        if (!strip) return;
+                        const real = strip.querySelector('[data-orig="1"]');
+                        if (!real) return;
+                        strip.replaceChildren(real);
+                        strip.style.transform = 'none';
+                        strip.style.willChange = 'auto';
+                    });
+                    if (settings.colorTo) window.gsap.set(strips, { color: settings.colorTo });
+                }
+            }
+        });
+        
+        const addTween = (targets, at) => {
+            const vars = {
+                duration: settings.duration,
+                ease: settings.ease,
+                force3D: true,
+                stagger: settings.animationMode === 'evenodd' ? settings.stagger : 0
+            };
+            if (isVertical) {
+                vars.y = (i, t) => parseFloat(t.getAttribute('data-final-y') || '0');
+            } else {
+                vars.x = (i, t) => parseFloat(t.getAttribute('data-final-x') || '0');
+            }
+            tl.to(targets, vars, at);
+            if (settings.colorFrom && settings.colorTo) {
+                tl.to(targets, { color: settings.colorTo, duration: settings.duration, ease: settings.ease }, at);
+            }
+        };
+        
+        if (settings.animationMode === 'evenodd') {
+            const odd = strips.filter((_, i) => i % 2 === 1);
+            const even = strips.filter((_, i) => i % 2 === 0);
+            const oddTotal = settings.duration + Math.max(0, odd.length - 1) * settings.stagger;
+            const evenStart = odd.length ? oddTotal * 0.7 : 0;
+            if (odd.length) addTween(odd, 0);
+            if (even.length) addTween(even, evenStart);
+        } else {
+            strips.forEach(strip => {
+                const d = Math.random() * settings.maxDelay;
+                const vars = {
+                    duration: settings.duration,
+                    ease: settings.ease,
+                    force3D: true
+                };
+                if (isVertical) {
+                    vars.y = parseFloat(strip.getAttribute('data-final-y') || '0');
+                } else {
+                    vars.x = parseFloat(strip.getAttribute('data-final-x') || '0');
+                }
+                tl.to(strip, vars, d);
+            });
+        }
+    }
+    
+    build();
+    setTimeout(() => {
+        el.classList.add('is-ready');
+        play();
+    }, 50);
+    
+    if (settings.triggerOnHover) {
+        el.addEventListener('mouseenter', () => {
+            if (playing) return;
+            build();
+            play();
+        });
+    }
 }
 
 // StaggeredMenu Implementation
@@ -651,4 +672,3 @@ function initStaggeredMenu() {
         });
     });
 }
-

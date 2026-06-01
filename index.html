@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&family=Inter:wght@400;500;600;900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
     <link rel="stylesheet" href="modern-theme.css">
 </head>
 
@@ -23,9 +23,8 @@
 
     <!-- Splash Screen -->
     <div id="splash-screen" class="splash-screen">
-        <div class="ripple-grid-container" id="ripple-grid-container"></div>
         <div class="splash-content" id="splash-content">
-            <h1 class="splash-name" id="splash-name" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Mohamed Arif J</h1>
+            <h1 class="splash-name shuffle-parent" id="splash-name" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Mohamed Arif J</h1>
         </div>
     </div>
 
@@ -45,18 +44,21 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="nav-actions">
-            <!-- Mobile Menu Toggle Button (Visible only on mobile, replacing date) -->
-            <button class="sm-toggle" id="sm-toggle-btn" aria-label="Open menu">
-                <span class="sm-toggle-textWrap" aria-hidden="true">
-                    <span class="sm-toggle-textInner" id="sm-text-inner">
-                        <span class="sm-toggle-line">Menu</span>
-                        <span class="sm-toggle-line">Close</span>
+            <button class="sm-toggle star-border-container" id="sm-toggle-btn" aria-label="Open menu" style="padding: 1px 0;">
+                <div class="border-gradient-bottom" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 4s;"></div>
+                <div class="border-gradient-top" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 4s;"></div>
+                <div class="inner-content" style="padding: 8px 16px; border-radius: 20px;">
+                    <span class="sm-toggle-textWrap" aria-hidden="true">
+                        <span class="sm-toggle-textInner" id="sm-text-inner">
+                            <span class="sm-toggle-line">Menu</span>
+                            <span class="sm-toggle-line">Close</span>
+                        </span>
                     </span>
-                </span>
-                <span class="sm-icon" id="sm-icon" aria-hidden="true">
-                    <span class="sm-icon-line" id="sm-plus-h"></span>
-                    <span class="sm-icon-line sm-icon-line-v" id="sm-plus-v"></span>
-                </span>
+                    <span class="sm-icon" id="sm-icon" aria-hidden="true">
+                        <span class="sm-icon-line" id="sm-plus-h"></span>
+                        <span class="sm-icon-line sm-icon-line-v" id="sm-plus-v"></span>
+                    </span>
+                </div>
             </button>
         </div>
     </nav>
@@ -99,15 +101,25 @@
 
             <div class="hero-center-content">
                 <h1 class="giant-text solid-text reveal-fade delay-1">PORTFOLIO</h1>
+                <!-- Real Profile Picture of Mohamed Arif J -->
                 <img src="IMG_20260519_233652.jpg.jpeg" alt="Mohamed Arif J" class="hero-profile-pic reveal-fade delay-2">
-                <div class="signature-text">Mohamed Arif</div>
+                <!-- Cursive Text Signature of Mohamed Arif J -->
+                <span class="signature-text reveal-fade delay-3">Mohamed Arif J</span>
             </div>
 
             <div class="hero-intro reveal-fade delay-3">
                 <p class="hero-subtitle">Building intelligent applications from backend architectures to deep learning models.</p>
                 <div class="hero-ctas">
-                    <a href="#projects" class="btn btn-primary">View My Work</a>
-                    <a href="#" class="btn btn-outline" target="_blank">Download Resume</a>
+                    <div class="star-border-container">
+                        <div class="border-gradient-bottom" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 5s;"></div>
+                        <div class="border-gradient-top" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 5s;"></div>
+                        <a href="#projects" class="inner-content" style="padding: 12px 28px; border-radius: 20px; font-weight: 600;">View My Work</a>
+                    </div>
+                    <div class="star-border-container">
+                        <div class="border-gradient-bottom" style="background: radial-gradient(circle, white, transparent 10%); animation-duration: 6s;"></div>
+                        <div class="border-gradient-top" style="background: radial-gradient(circle, white, transparent 10%); animation-duration: 6s;"></div>
+                        <a href="#" class="inner-content" target="_blank" style="padding: 12px 28px; border-radius: 20px; font-weight: 600; background: transparent; border: 1px solid rgba(255,255,255,0.2);">Download Resume</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -398,7 +410,11 @@
                                 <label for="message">Message</label>
                                 <textarea id="message" name="message" rows="4" placeholder="Hello, I'd like to discuss a project..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                            <div class="star-border-container btn-block" style="width: 100%; display: block; border-radius: 20px; padding: 1px 0;">
+                                <div class="border-gradient-bottom" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 6s;"></div>
+                                <div class="border-gradient-top" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 6s;"></div>
+                                <button type="submit" class="inner-content btn-block" style="width: 100%; background: #000; border: 1px solid #222; text-transform: uppercase; font-weight: 600; padding: 16px 26px; border-radius: 20px; color: white;">Send Message</button>
+                            </div>
                         </form>
                     </div>
                     <div class="contact-info reveal-fade delay-1">
@@ -436,13 +452,13 @@
 
     <!-- GSAP CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- OGL CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/ogl@0.0.113/dist/ogl.umd.js"></script>
+    <!-- OGL CDN (Loaded Locally) -->
+    <script src="ogl.umd.js"></script>
     <!-- Three.js CDN for LiquidEther -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- LiquidEther WebGL script -->
-    <script src="liquid-ether.js"></script>
+    <script src="liquid-ether.js?v=3"></script>
     <!-- Main Portfolio Script -->
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

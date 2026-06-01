@@ -256,12 +256,13 @@ h1, h2, h3, h4 {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1; /* In front of solid text */
+    z-index: 1; /* In front of solid text, behind signature */
     height: 100vh; 
     width: 100vw;
     object-fit: cover;
     pointer-events: none;
     mix-blend-mode: screen; /* Blends the black background of the JPEG with WebGL liquid background */
+    opacity: 0.85;
 }
 
 .outline-text {
@@ -275,11 +276,12 @@ h1, h2, h3, h4 {
     position: absolute;
     z-index: 3;
     font-family: var(--font-signature);
-    color: #ff3333; /* Red font as requested */
+    color: #cc2222; /* Classy dimmer red cursive font as requested */
     font-size: clamp(5rem, 12vw, 12rem); /* Increased size */
     transform: rotate(-5deg) translateY(120px); /* Lowered position */
     text-shadow: 2px 2px 10px rgba(0,0,0,0.5); /* Pop out from background */
     clip-path: inset(-50% 100% -50% -50%); /* Start hidden from right to left */
+    pointer-events: none;
 }
 
 .signature-text.is-writing {
@@ -768,15 +770,15 @@ h1, h2, h3, h4 {
         bottom: 0 !important;
         transform: none !important;
         width: 100vw !important;
-        height: 100vh !important; /* Fills phone width and height completely */
-        object-fit: cover !important; /* Crops cleanly while fitting exact dimensions */
+        height: 100vh !important;
+        object-fit: cover !important;
         object-position: center !important;
-        mix-blend-mode: screen !important; /* Blends JPEG black background with LiquidEther */
+        mix-blend-mode: screen !important;
         opacity: 0.85 !important;
         pointer-events: none !important;
         z-index: 1 !important;
     }
-    
+
     .signature-text {
         font-size: clamp(3rem, 12vw, 6rem) !important; /* Perfectly sized signature for Mr De Haviland */
         transform: translate(-50%, -50%) rotate(-5deg) translateY(14vh) !important; /* Centered relative to viewport, shifted down */
@@ -888,7 +890,7 @@ h1, h2, h3, h4 {
   width: clamp(260px, 38vw, 420px);
   pointer-events: none;
   z-index: 5;
-  opacity: 0;
+  opacity: 1;
 }
 [data-position='left'] .sm-prelayers {
   right: auto; left: 0;
@@ -897,8 +899,8 @@ h1, h2, h3, h4 {
   position: absolute;
   top: 0; right: 0;
   height: 100%; width: 100%;
-  transform: translateX(100%);
-  opacity: 0;
+  transform: none;
+  opacity: 1;
 }
 .sm-toggle {
   display: none; /* Hidden on desktop */
@@ -966,8 +968,8 @@ h1, h2, h3, h4 {
   overflow-y: auto;
   z-index: 10;
   pointer-events: auto;
-  opacity: 0;
-  transform: translateX(100%);
+  opacity: 1;
+  transform: none;
 }
 .sm-panel-inner {
   flex: 1; display: flex; flex-direction: column; gap: 1.25rem;
@@ -988,7 +990,7 @@ h1, h2, h3, h4 {
   display: inline-block;
 }
 .sm-panel-itemLabel {
-  display: inline-block; transform-origin: 50% 100%; transform: scaleY(0);
+  display: inline-block; transform-origin: 50% 100%;
 }
 .sm-panel-list[data-numbering="true"] {
   counter-reset: smItem;
@@ -1020,3 +1022,125 @@ h1, h2, h3, h4 {
     width: 100%;
   }
 }
+
+/* ===== StarBorder Component (React Bits) ===== */
+.star-border-container {
+  display: inline-block;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  padding: 1px 0; /* Thickness parameter */
+  z-index: 1;
+}
+
+.star-border-container:hover {
+  transform: translateY(-2px);
+}
+
+.border-gradient-bottom {
+  position: absolute;
+  width: 300%;
+  height: 50%;
+  opacity: 0.7;
+  bottom: -12px;
+  right: -250%;
+  border-radius: 50%;
+  animation: star-movement-bottom linear infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.border-gradient-top {
+  position: absolute;
+  opacity: 0.7;
+  width: 300%;
+  height: 50%;
+  top: -12px;
+  left: -250%;
+  border-radius: 50%;
+  animation: star-movement-top linear infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.star-border-container .inner-content {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #222;
+  background: #000;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px 28px;
+  border-radius: 20px;
+  z-index: 1;
+  text-decoration: none;
+  cursor: none; /* Align with custom cursor */
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.star-border-container:hover .inner-content {
+  background: #111;
+  border-color: #444;
+}
+
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
+
+/* ===== Shuffle Component CSS (React Bits) ===== */
+.shuffle-parent {
+  display: inline-block;
+  white-space: normal;
+  word-wrap: break-word;
+  will-change: transform;
+  line-height: 1;
+  text-transform: uppercase;
+  visibility: hidden;
+}
+
+.shuffle-parent.is-ready {
+  visibility: visible;
+}
+
+.shuffle-char-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: baseline;
+  position: relative;
+}
+
+.shuffle-char-wrapper > span {
+  display: inline-flex;
+  will-change: transform;
+}
+
+.shuffle-char {
+  line-height: 1;
+  display: inline-block;
+  text-align: center;
+}
+

@@ -61,7 +61,7 @@ function initLiquidEther(container, options = {}) {
   }
 
   const paletteTex = makePaletteTexture(colors);
-  const bgVec4 = new THREE.Vector4(0, 0, 0, 0); // Always transparent
+  const bgVec4 = new THREE.Vector4(0, 0, 0, 0);
 
   class CommonClass {
     constructor() {
@@ -267,7 +267,7 @@ function initLiquidEther(container, options = {}) {
       this.lastTime = performance.now();
       this.activationTime = 0;
       this.margin = 0.2;
-      this._tmpDir = new THREE.Vector2(); // reuse temp vector to avoid per-frame alloc
+      this._tmpDir = new THREE.Vector2();
       this.pickNewTarget();
     }
     pickNewTarget() {

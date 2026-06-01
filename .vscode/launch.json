@@ -1,21 +1,24 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Edge",
-            "request": "launch",
-            "type": "msedge",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}"
-        },
-        {
+            "name": "Open index.html (Chrome - No Server Needed)",
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
+            "file": "${workspaceFolder}/index.html"
+        },
+        {
+            "name": "Open index.html (Edge - No Server Needed)",
+            "type": "msedge",
+            "request": "launch",
+            "file": "${workspaceFolder}/index.html"
+        },
+        {
+            "name": "Launch Chrome (VS Code Live Server - Port 5500)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:5500/index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]
