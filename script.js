@@ -343,6 +343,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: true });
 
+    // Initialize mobile menu text shuffles
+    const menuLabelEls = document.querySelectorAll('.staggered-menu-panel .shuffle-parent');
+    menuLabelEls.forEach(el => {
+        if (typeof initShuffleText === 'function') {
+            initShuffleText(el, {
+                shuffleDirection: 'right',
+                duration: 0.35,
+                animationMode: 'evenodd',
+                shuffleTimes: 1,
+                ease: 'power3.out',
+                stagger: 0.03,
+                triggerOnHover: true
+            });
+        }
+    });
+
     // Initialize StaggeredMenu
     if (typeof initStaggeredMenu === 'function') {
         initStaggeredMenu();
@@ -619,7 +635,6 @@ function initStaggeredMenu() {
     if (!toggleBtn || !panel) return;
 
     const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
-    const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list .sm-panel-item'));
     const socialTitle = panel.querySelector('.sm-socials-title');
     const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
 
@@ -634,7 +649,6 @@ function initStaggeredMenu() {
     gsap.set(textInner, { yPercent: 0 });
 
     if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
-    if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 });
     if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
     if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
 
@@ -653,15 +667,20 @@ function initStaggeredMenu() {
     const itemsStart = panelInsertTime + panelDuration * 0.15;
     if (itemEls.length) {
         openTl.to(itemEls, { yPercent: 0, rotate: 0, duration: 1, ease: 'power4.out', stagger: { each: 0.1, from: 'start' } }, itemsStart);
-        if (numberEls.length) {
-            openTl.to(numberEls, { duration: 0.6, ease: 'power2.out', '--sm-num-opacity': 1, stagger: { each: 0.08, from: 'start' } }, itemsStart + 0.1);
-        }
+        // Call the shuffle text animation for each menu item staggered in sync with slide-up
+        itemEls.forEach((el, index) => {
+            openTl.call(() => {
+                if (typeof el.triggerShuffle === 'function') {
+                    el.triggerShuffle();
+                }
+            }, null, itemsStart + index * 0.1);
+        });
     }
 
     const socialsStart = panelInsertTime + panelDuration * 0.4;
     if (socialTitle) openTl.to(socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
     if (socialLinks.length) {
-        openTl.to(socialLinks, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: { each: 0.08, from: 'start' }, onComplete: () => gsap.set(socialLinks, { clearProps: 'opacity' }) }, socialsStart + 0.04);
+        openTl.to(socialLinks, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: { each: 0.08, from: 'start' } }, socialsStart + 0.04);
     }
 
     function toggleMenu() {
@@ -686,7 +705,6 @@ function initStaggeredMenu() {
             xPercent: offscreen, duration: 0.32, ease: 'power3.in', overwrite: 'auto',
             onComplete: () => {
                 if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
-                if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 });
                 if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
                 if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
                 if (wrapper) wrapper.style.pointerEvents = 'none';
