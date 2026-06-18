@@ -1,51 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ===== Dynamic Date & Ticking Scramble Clock ===== */
-    const dateDisplay = document.querySelector('.nav-date-display');
-    const timeDisplay = document.querySelector('.nav-time-display');
-    
-    if (timeDisplay) {
-        function updateClock() {
-            const now = new Date();
-            
-            // Format date: "01 Jun, 2026"
-            const day = String(now.getDate()).padStart(2, '0');
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const month = monthNames[now.getMonth()];
-            const year = now.getFullYear();
-            const dateString = `${day} ${month}, ${year}`;
-            
-            if (dateDisplay && dateDisplay.textContent !== dateString) {
-                dateDisplay.textContent = dateString;
-            }
-            
-            // Format time: "HH:MM:SS"
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            
-            // Set time content
-            timeDisplay.textContent = timeString;
-            
-            // Trigger scramble/shuffle animation on the ticking clock!
-            if (typeof initShuffleText === 'function') {
-                initShuffleText(timeDisplay, {
-                    shuffleDirection: 'down',
-                    duration: 0.25,
-                    animationMode: 'random',
-                    shuffleTimes: 1,
-                    ease: 'power2.out',
-                    stagger: 0.01,
-                    triggerOnHover: false
-                });
-            }
-        }
-        
-        // Initialize immediately
-        updateClock();
-        // Update every second
-        setInterval(updateClock, 1000);
+    /* ===== Theme Toggle (View Transitions API) ===== */
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', (e) => {
+            const rect = themeToggleBtn.getBoundingClientRect();
+            const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+            const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--toggle-x', x + '%');
+            document.documentElement.style.setProperty('--toggle-y', y + '%');
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const switchTheme = () => { document.body.setAttribute('data-theme', isDark ? 'light' : 'dark'); };
+            if (!document.startViewTransition) { switchTheme(); return; }
+            document.startViewTransition(switchTheme);
+        });
     }
     
     /* ===== Custom Cursor ===== */
@@ -159,9 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Splash Screen Logic
+    // Splash Screen + Staircase Preloader Logic
     const splashScreen = document.getElementById('splash-screen');
     const splashName = document.getElementById('splash-name');
+    const staircaseOverlay = document.getElementById('staircase-overlay');
     
     if (splashName && typeof initShuffleText === 'function') {
         initShuffleText(splashName, {
@@ -171,52 +140,127 @@ document.addEventListener('DOMContentLoaded', () => {
             shuffleTimes: 1,
             ease: 'power3.out',
             stagger: 0.03,
-            triggerOnHover: true
+            triggerOnHover: false
         });
     }
     
-    // Hold splash screen for 1.1 seconds, then fade it out cleanly to the homepage
+    // After text animation (~1.1s), trigger dual-direction staircase
     setTimeout(() => {
-        if (splashScreen) {
-            splashScreen.classList.add('hidden');
-            document.body.classList.remove('no-scroll');
-        }
-        
-        // Trigger hero elements after splash starts hiding
-        setTimeout(() => {
-            const heroElements = document.querySelectorAll('.hero-section .reveal-text, .reveal-fade');
-            heroElements.forEach(el => el.classList.add('in-view'));
-            
-            // Signature writing animation
-            const signature = document.querySelector('.signature-text');
-            if(signature) {
-                signature.classList.add('is-writing');
-            }
-        }, 300);
-    }, 1100);
-
-    /* ===== Smooth Parallax on Scroll ===== */
-    const parallaxImages = document.querySelectorAll('.parallax-img');
-    
-    window.addEventListener('scroll', () => {
-        if (isTouchDevice) return; // Keep it simple on mobile
-        
-        const scrollY = window.scrollY;
-        
-        parallaxImages.forEach(img => {
-            const container = img.closest('.parallax-container');
-            if (container) {
-                const rect = container.getBoundingClientRect();
-                // Check if element is in viewport
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    // Calculate a slight translateY based on scroll position relative to the element
-                    const distance = rect.top;
-                    const speed = 0.1;
-                    const yPos = distance * speed;
-                    img.style.transform = `translateY(${yPos}px)`;
-                }
+        if (!splashScreen || !staircaseOverlay || !window.gsap) return;
+        const topHalves = staircaseOverlay.querySelectorAll('.staircase-top');
+        const bottomHalves = staircaseOverlay.querySelectorAll('.staircase-bottom');
+        // Fade out splash text
+        gsap.to('#splash-content', { opacity: 0, duration: 0.25, ease: 'power2.in' });
+        // Staircase animation timeline
+        const stairTl = gsap.timeline({
+            delay: 0.2,
+            onComplete: () => {
+                splashScreen.style.display = 'none';
+                staircaseOverlay.style.display = 'none';
+                document.body.classList.remove('no-scroll');
+                // Trigger hero reveals
+                const heroEls = document.querySelectorAll('.hero-section .reveal-text, .reveal-fade');
+                heroEls.forEach(el => el.classList.add('in-view'));
+                const sig = document.querySelector('.signature-text');
+                if (sig) sig.classList.add('is-writing');
             }
         });
+        // Top halves slide UP with staircase stagger
+        stairTl.to(topHalves, {
+            scaleY: 0, transformOrigin: 'top center',
+            duration: 0.6, ease: 'power4.inOut',
+            stagger: { each: 0.05, from: 'start' }
+        }, 0);
+        // Bottom halves slide DOWN with reverse stagger
+        stairTl.to(bottomHalves, {
+            scaleY: 0, transformOrigin: 'bottom center',
+            duration: 0.6, ease: 'power4.inOut',
+            stagger: { each: 0.05, from: 'end' }
+        }, 0.08);
+    }, 1100);
+
+    /* ===== Cinematic Parallax (Hero Section) ===== */
+    const heroSection = document.querySelector('.hero-section');
+    const heroImg = document.querySelector('.hero-profile-pic');
+    const heroText = document.querySelector('.giant-text');
+    const heroSig = document.querySelector('.signature-text');
+    const heroIntro = document.querySelector('.hero-intro');
+
+    /* ===== Scroll Progress Bar + Section Indicator ===== */
+    const scrollProgressBar = document.getElementById('scroll-progress-bar');
+    const scrollProgressContainer = document.getElementById('scroll-progress');
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    const scrollSectionName = document.getElementById('scroll-section-name');
+    let indicatorTimeout = null;
+
+    const sectionMap = [
+        { id: null, name: 'Home', el: heroSection },
+        { id: 'about', name: 'About', el: document.getElementById('about') },
+        { id: 'education', name: 'Education', el: document.getElementById('education') },
+        { id: 'projects', name: 'Projects', el: document.getElementById('projects') },
+        { id: 'skills', name: 'Skills', el: document.getElementById('skills') },
+        { id: 'contact', name: 'Contact', el: document.getElementById('contact') }
+    ].filter(s => s.el);
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+
+        // Update progress bar
+        if (scrollProgressBar) scrollProgressBar.style.width = progress + '%';
+        if (scrollProgressContainer) {
+            if (scrollY > 50) scrollProgressContainer.classList.add('active');
+            else scrollProgressContainer.classList.remove('active');
+        }
+
+        // Section indicator
+        if (scrollIndicator && scrollSectionName) {
+            let currentSection = 'Home';
+            for (let i = sectionMap.length - 1; i >= 0; i--) {
+                const s = sectionMap[i];
+                if (s.el && s.el.getBoundingClientRect().top <= window.innerHeight * 0.4) {
+                    currentSection = s.name; break;
+                }
+            }
+            if (scrollSectionName.textContent !== currentSection) {
+                scrollSectionName.textContent = currentSection;
+            }
+            if (scrollY > 100) {
+                scrollIndicator.classList.add('visible');
+                clearTimeout(indicatorTimeout);
+                indicatorTimeout = setTimeout(() => scrollIndicator.classList.remove('visible'), 1500);
+            } else { scrollIndicator.classList.remove('visible'); }
+        }
+
+        // Cinematic parallax for hero
+        if (heroSection && !isTouchDevice) {
+            const heroRect = heroSection.getBoundingClientRect();
+            const heroProgress = Math.min(1, Math.max(0, -heroRect.top / (heroRect.height * 0.6)));
+            if (heroImg) {
+                const scale = 1 + heroProgress * 0.3;
+                heroImg.style.transform = `scale(${scale})`;
+                heroImg.style.opacity = 0.85 - heroProgress * 0.4;
+            }
+            if (heroText) {
+                heroText.style.transform = `scaleY(1.3) translateY(${heroProgress * -60}px)`;
+                heroText.style.opacity = 1 - heroProgress * 1.5;
+            }
+            if (heroSig) {
+                const sigBase = window.innerWidth <= 1024
+                    ? 'translate(-50%, -50%) rotate(-5deg) translateY(14vh)'
+                    : `rotate(-5deg) translateY(${120 - heroProgress * 80}px)`;
+                heroSig.style.transform = sigBase;
+                heroSig.style.opacity = 1 - heroProgress * 1.2;
+            }
+            if (heroIntro) {
+                heroIntro.style.transform = `translateY(${heroProgress * -40}px)`;
+                heroIntro.style.opacity = 1 - heroProgress * 1.5;
+            }
+            // Cinematic clip-path mask (circle closing)
+            const clipSize = 100 - heroProgress * 25;
+            heroSection.style.clipPath = `circle(${clipSize}% at 50% 50%)`;
+        }
     }, { passive: true });
 
     /* ===== Magnetic Buttons (Optional subtle effect for Contact CTA) ===== */
@@ -348,13 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
     menuLabelEls.forEach(el => {
         if (typeof initShuffleText === 'function') {
             initShuffleText(el, {
-                shuffleDirection: 'right',
-                duration: 0.35,
-                animationMode: 'evenodd',
-                shuffleTimes: 1,
-                ease: 'power3.out',
-                stagger: 0.03,
-                triggerOnHover: true
+                shuffleDirection: 'right', duration: 0.35, animationMode: 'evenodd',
+                shuffleTimes: 1, ease: 'power3.out', stagger: 0.03, triggerOnHover: true
             });
         }
     });
@@ -363,6 +402,34 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof initStaggeredMenu === 'function') {
         initStaggeredMenu();
     }
+
+    /* ===== Rolling Text Animation for Subtitles ===== */
+    const subtitleEls = document.querySelectorAll('.subtitle');
+    subtitleEls.forEach(sub => {
+        const text = sub.textContent;
+        sub.innerHTML = '';
+        sub.classList.add('rolling-text-wrapper');
+        const chars = text.split('');
+        const mid = Math.floor(chars.length / 2);
+        chars.forEach((ch, i) => {
+            const span = document.createElement('span');
+            span.className = 'rolling-char' + (ch === ' ' ? ' is-space' : '');
+            span.textContent = ch === ' ' ? '\u00A0' : ch;
+            // Stagger delay: center chars animate first, edges last
+            const distFromCenter = Math.abs(i - mid);
+            span.style.transitionDelay = (distFromCenter * 0.04) + 's';
+            sub.appendChild(span);
+        });
+    });
+    // Observer to trigger rolling text on scroll
+    const rollingObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.querySelectorAll('.rolling-char').forEach(ch => ch.classList.add('rolled-in'));
+            }
+        });
+    }, { threshold: 0.3 });
+    subtitleEls.forEach(el => rollingObserver.observe(el));
 });
 
 // Shuffle Component Implementation (React Bits variant in Vanilla JS)

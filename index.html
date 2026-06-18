@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     <link rel="stylesheet" href="style.css?v=4">
     <link rel="stylesheet" href="modern-theme.css">
+    <link rel="stylesheet" href="enhancements.css">
 </head>
 
 <body class="no-scroll" data-theme="dark">
@@ -26,6 +27,28 @@
         <div class="splash-content" id="splash-content">
             <h1 class="splash-name shuffle-parent" id="splash-name" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">Mohamed Arif J</h1>
         </div>
+    </div>
+
+    <!-- Staircase Preloader Overlay (dual-direction) -->
+    <div class="staircase-overlay" id="staircase-overlay">
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+        <div class="staircase-col"><div class="staircase-half staircase-top"></div><div class="staircase-half staircase-bottom"></div></div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-container" id="scroll-progress">
+        <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+    </div>
+    <div class="scroll-progress-indicator" id="scroll-indicator">
+        <span id="scroll-section-name">Home</span>
     </div>
 
     <div class="noise-overlay"></div>
@@ -44,11 +67,16 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="nav-actions">
-            <!-- Desktop Date & Time Display -->
-            <div class="nav-datetime-container">
-                <div class="nav-date-display">June 1, 2026</div>
-                <div class="nav-time-display" id="nav-time">13:15:53</div>
-            </div>
+            <!-- Desktop Theme Toggle Button -->
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+                <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" class="theme-toggle-svg">
+                    <g class="theme-inner-circle">
+                        <path d="M120 67.5C149.25 67.5 172.5 90.75 172.5 120C172.5 149.25 149.25 172.5 120 172.5" fill="white"/>
+                        <path d="M120 67.5C90.75 67.5 67.5 90.75 67.5 120C67.5 149.25 90.75 172.5 120 172.5" fill="black"/>
+                    </g>
+                    <path class="theme-outer-ring" d="M120 3.75C55.5 3.75 3.75 55.5 3.75 120C3.75 184.5 55.5 236.25 120 236.25C184.5 236.25 236.25 184.5 236.25 120C236.25 55.5 184.5 3.75 120 3.75ZM120 214.5V172.5C90.75 172.5 67.5 149.25 67.5 120C67.5 90.75 90.75 67.5 120 67.5V25.5C172.5 25.5 214.5 67.5 214.5 120C214.5 172.5 172.5 214.5 120 214.5Z" fill="white"/>
+                </svg>
+            </button>
             
             <button class="sm-toggle star-border-container" id="sm-toggle-btn" aria-label="Open menu" style="padding: 1px 0;">
                 <div class="border-gradient-bottom" style="background: radial-gradient(circle, #5227FF, transparent 10%); animation-duration: 4s;"></div>
@@ -458,6 +486,7 @@
 
     <!-- GSAP CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <!-- OGL CDN (Loaded Locally) -->
     <script src="ogl.umd.js"></script>
     <!-- Three.js CDN for LiquidEther -->
